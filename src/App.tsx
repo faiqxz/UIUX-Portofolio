@@ -9,13 +9,7 @@ import {
   Github, 
   Linkedin, 
   Mail, 
-  ExternalLink,
-  ChevronRight,
-  Code2,
-  Phone,
-  Layout,
-  Smartphone,
-  Globe
+  Phone
 } from "lucide-react";
 import { useRef } from "react";
 
@@ -139,6 +133,7 @@ export default function App() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="bg-[#F9F9F9] text-[#1A1A1A] px-8 py-4 rounded-full font-medium flex items-center gap-2 group"
+                onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}
               >
                 Hire Me <ArrowUpRight className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
               </motion.button>
@@ -147,7 +142,14 @@ export default function App() {
                 whileTap={{ scale: 0.95 }}
                 className="border border-[#F9F9F9]/20 px-8 py-4 rounded-full font-medium hover:bg-[#F9F9F9]/5 transition-colors"
               >
-                Download CV
+                <a 
+                  href="https://drive.google.com/drive/folders/19sAP-y6eZ6nVmynZCHuWvek-VLisyvfa" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2"
+                >
+                  Download Resume
+                </a>
               </motion.button>
             </div>
           </motion.div>
