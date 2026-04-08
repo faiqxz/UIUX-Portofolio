@@ -265,63 +265,37 @@ export default function App() {
         </div>
       </section>
 
-      {/* About Section */}
-      <section id="about" className="py-32 bg-[#0A0A0A] px-6 lg:px-24">
-        <div className="grid lg:grid-cols-2 gap-24 items-center">
-          <div className="relative">
-            <div className="grid grid-cols-2 gap-4">
-              <motion.a 
-                href={SOCIAL_LINKS[0].url}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 0.95, rotate: -2 }}
-                className="aspect-[3/4] rounded-2xl overflow-hidden bg-[#1A1A1A] block cursor-pointer"
-              >
-                <img src="https://media.licdn.com/dms/image/v2/D562DAQFscuoJ2r0pAg/profile-treasury-image-shrink_800_800/profile-treasury-image-shrink_800_800/0/1721807151145?e=1776261600&v=beta&t=unDuNlFxROfxWdIH-RK1GOzSATXFbUGz2uXJc_6UxYY" alt="About" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-              </motion.a>
-              <motion.a 
-                href={SOCIAL_LINKS[0].url}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 0.95, rotate: 2 }}
-                className="aspect-[3/4] rounded-2xl overflow-hidden bg-[#1A1A1A] mt-12 block cursor-pointer"
-              >
-                <img src="https://media.licdn.com/dms/image/v2/D5622AQHQfAMzDuCw5Q/feedshare-shrink_2048_1536/feedshare-shrink_2048_1536/0/1729440196592?e=1777507200&v=beta&t=6bQqlNHr6FxCHymk3Frxmtga39MemCqzbGwUda45la4" alt="About" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-              </motion.a>
-            </div>
-            <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-[#F9F9F9] rounded-full flex items-center justify-center text-[#1A1A1A] text-[10px] font-bold uppercase tracking-widest text-center p-4 animate-spin-slow">
-              UI/UX Designer • Frontend Dev • 
-            </div>
-          </div>
-          <div>
-            <span className="text-sm font-bold uppercase tracking-widest text-[#F9F9F9]/40 mb-4 block">About Me</span>
-            <h2 className="text-5xl font-bold tracking-tighter mb-8">Let's get to know me.</h2>
-            <p className="text-lg text-[#F9F9F9]/60 leading-relaxed mb-8">
-              Call me Faiq. I'm a UI/UX Designer from Indonesia, precisely in Palembang. My main tools are Figma and React JS for bringing designs to life.
-            </p>
-            <p className="text-lg text-[#F9F9F9]/60 leading-relaxed mb-12">
-              I have a background in Information Systems, which gives me a unique perspective on the intersection of technology and human-centered design. I believe in creating solutions that are not just pretty, but truly functional.
-            </p>
-            
-            <div className="grid grid-cols-2 gap-8">
-              <div>
-                <h4 className="font-bold uppercase text-[10px] tracking-widest text-[#F9F9F9]/40 mb-4">My Skills</h4>
-                <div className="flex flex-wrap gap-2">
-                  {SKILLS.slice(0, 6).map((skill, i) => (
-                    <span key={i} className="text-xs font-medium">{skill}</span>
-                  ))}
-                  <span className="text-xs font-medium text-[#F9F9F9]/40">and more...</span>
-                </div>
-              </div>
-              <div>
-                <h4 className="font-bold uppercase text-[10px] tracking-widest text-[#F9F9F9]/40 mb-4">Education</h4>
-                <p className="text-xs font-bold">Universitas Sriwijaya</p>
-                <p className="text-[10px] text-[#F9F9F9]/60">Information Systems (GPA 3.96)</p>
+      {/* Footer */}
+      <footer id="contact" className="bg-[#F9F9F9] text-[#1A1A1A] py-32 px-6 lg:px-24 rounded-t-[3rem]">
+        <div className="text-center max-w-4xl mx-auto">
+          <h2 className="text-5xl lg:text-8xl font-bold tracking-tighter mb-12">
+            Let me know if you have project questions or opportunities to collaborate 👋
+          </h2>
+          <motion.button 
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="bg-[#1A1A1A] text-white px-12 py-6 rounded-full text-xl font-bold mb-20"
+          >
+            Get in Touch
+          </motion.button>
+          
+          <div className="flex flex-col md:flex-row justify-between items-center pt-12 border-t border-[#1A1A1A]/10 gap-8">
+            <div className="text-left">
+              <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#1A1A1A]/40 mb-4">Follow Me</p>
+              <div className="flex gap-6">
+                {SOCIAL_LINKS.map((social, i) => (
+                  <a key={i} href={social.url} target="_blank" rel="noopener noreferrer" className="hover:text-[#1A1A1A]/60 transition-colors">
+                    <social.icon className="w-5 h-5" />
+                  </a>
+                ))}
               </div>
             </div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#1A1A1A]/40">
+              © izinnnnn design by Al Ikhsan Faiq
+            </p>
           </div>
         </div>
-      </section>
+      </footer>
     </div>
   );
 }
