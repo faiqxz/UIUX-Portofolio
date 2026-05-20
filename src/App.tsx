@@ -98,7 +98,8 @@ const EXPERIENCE = [
     company: "Kos Nyaman",
     period: "Sep 2024 - Present",
     description: "Built and deployed a responsive property rental platform using AI-native design systems in a React stack. Developing an occupancy dashboard integrating Firebase and LLM chatbot assistants for customer support.",
-    metrics: "Launched web platform; reduced tenant onboarding inquiries by 35% through dynamic FAQs."
+    metrics: "Launched web platform; reduced tenant onboarding inquiries by 35% through dynamic FAQs.",
+    link: "https://kos-nyaman.vercel.app/"
   },
   {
     role: "Community Service Lead — Website Design Training",
@@ -918,7 +919,15 @@ export default function App() {
                   <div className="space-y-1">
                     <span className="text-[9px] font-mono font-bold uppercase tracking-wider text-black/40">{exp.period}</span>
                     <h3 className="text-lg md:text-xl font-bold tracking-tight">{exp.role}</h3>
-                    <p className="text-xs font-semibold text-black/60">{exp.company}</p>
+                    <p className="text-xs font-semibold text-black/60">
+                      {exp.link ? (
+                        <a href={exp.link} target="_blank" rel="noopener noreferrer" className="hover:text-blue-500 hover:underline transition-colors flex items-center gap-1 w-fit">
+                          {exp.company} <ArrowUpRight className="w-3 h-3" />
+                        </a>
+                      ) : (
+                        exp.company
+                      )}
+                    </p>
                   </div>
                   
                   <motion.div 
@@ -1049,8 +1058,10 @@ export default function App() {
           whileTap={{ scale: 0.95 }}
         >
           <StarBorder
-            as="button"
-            onClick={() => setIsHireWidgetOpen(true)}
+            as="a"
+            href="https://wa.me/6287899677415"
+            target="_blank"
+            rel="noopener noreferrer"
             color="#10B981"
             speed="3.5s"
             thickness={1.5}
