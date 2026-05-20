@@ -97,7 +97,7 @@ const EXPERIENCE = [
     role: "Property Manager & Designer",
     company: "Kos Nyaman",
     period: "Sep 2024 - Present",
-    description: "Built and deployed a responsive property rental platform using AI-native design systems in a React stack. Developing an occupancy dashboard integrating Firebase and LLM chatbot assistants for customer support.",
+    description: "Built and deployed a responsive property rental platform using AI-native design systems in a React stack (published). Developing an occupancy dashboard integrating Firebase and LLM chatbot assistants for customer support(under development).",
     metrics: "Launched web platform; reduced tenant onboarding inquiries by 35% through dynamic FAQs.",
     link: "https://kos-nyaman.vercel.app/"
   },
@@ -106,14 +106,14 @@ const EXPERIENCE = [
     company: "LPPM, Universitas Sriwijaya",
     period: "Aug 2025 - Oct 2025",
     description: "Initiated and taught a structured training program enabling non-technical participants to construct modern educational web interfaces utilizing AI-assisted UI tools.",
-    metrics: "Mentored 40+ students; achieved 92% training completion rating."
+    metrics: "Mentored 20+ Teachers; achieved 92% training completion rating."
   },
   {
     role: "Lab Assistant",
     company: "Computer Networking Lab",
     period: "Aug 2024 - Mar 2025",
     description: "Delivered networking instruction (OSI model, TCP/IP, subnetting) and supervised Cisco Packet Tracer simulations and physical LAN router setups for undergraduate students.",
-    metrics: "Instructed 120+ undergraduates across 4 lab sections."
+    metrics: "Instructed 60+ undergraduate students across 2 lab sections."
   },
   {
     role: "UI/UX Designer Intern",
