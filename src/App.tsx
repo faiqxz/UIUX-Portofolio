@@ -27,13 +27,15 @@ import StarBorder from "./components/StarBorder.tsx";
 import MagicBento, { MagicBentoCard } from "./components/MagicBento.tsx";
 import DotGrid from "./components/DotGrid.tsx";
 
+const BASE = import.meta.env.BASE_URL;
+
 const PROJECTS = [
   {
     title: "Yappy",
     category: "Language Learning Application",
     description: "3rd Place winner at UIUX Competition. An AI-native language app integrating interactive conversational scenarios and Maze-validated voice interfaces.",
     tags: ["Award Winning", "Conversational AI", "Maze Testing"],
-    image: "/images/Yappy Mockup.png",
+    image: `${BASE}images/Yappy Mockup.png`,
     link: "https://bit.ly/YappyPPT",
     accentColor: "from-amber-500/20 to-orange-500/20",
     textColor: "text-amber-600"
@@ -43,7 +45,7 @@ const PROJECTS = [
     category: "Fitness Mobile Application",
     description: "A structured workout logs app designed from problem definition to Maze validation, supporting progressive overload tracking and muscle analytics.",
     tags: ["UX Research", "Design System", "Data Visualization"],
-    image: "/images/Neurofit Mockup.png",
+    image: `${BASE}images/Neurofit Mockup.png`,
     link: "https://bit.ly/NeurofitPPT",
     accentColor: "from-blue-500/20 to-indigo-500/20",
     textColor: "text-blue-600"
@@ -53,7 +55,7 @@ const PROJECTS = [
     category: "Health Consultant Application",
     description: "A digital health platform streamlining medical directories and patient consulting records, mapping clinical user flows for high accessibility.",
     tags: ["Information Architecture", "HealthTech", "Figma Components"],
-    image: "/images/PrimaPLus Mockup.png",
+    image: `${BASE}images/PrimaPLus Mockup.png`,
     link: "https://bit.ly/PrimaPLus",
     accentColor: "from-emerald-500/20 to-teal-500/20",
     textColor: "text-emerald-600"
@@ -63,7 +65,7 @@ const PROJECTS = [
     category: "E-Commerce & Workout App",
     description: "An integrated e-commerce shop and workout mobile prototype mapping seamless navigation across supplementation shopping and fitness logging.",
     tags: ["UI/UX Design", "Cross-Domain Flows", "Maze Usability"],
-    image: "/images/Fitmart Mockup.png",
+    image: `${BASE}images/Fitmart Mockup.png`,
     link: "https://bit.ly/Prototype-FitMart",
     accentColor: "from-violet-500/20 to-fuchsia-500/20",
     textColor: "text-violet-600"
@@ -73,7 +75,7 @@ const PROJECTS = [
     category: "Integrated Travel & Booking App",
     description: "GDGoC Mobile application streamlining joint flight and lodging reservations with a simplified, transparent rescheduling and refund management system.",
     tags: ["GDGoC Challenge", "Travel Booking", "Reschedule & Refund Flow"],
-    image: "/images/Travelin Mockup.png",
+    image: `${BASE}images/Travelin Mockup.png`,
     link: "https://bitly.cx/Travelin",
     accentColor: "from-teal-500/20 to-emerald-500/20",
     textColor: "text-teal-600"
@@ -83,7 +85,7 @@ const PROJECTS = [
     category: "Academic Portal & Campus Assistant",
     description: "An academic mobile application for Universitas Sriwijaya students, organizing course registrations, real-time campus shuttle tracking, and exam schedules.",
     tags: ["EdTech", "Campus Services", "Mobile Portal"],
-    image: "/images/Unsri GO Mockup.png",
+    image: `${BASE}images/Unsri GO Mockup.png`,
     link: "https://unsri.ac.id",
     accentColor: "from-amber-500/20 to-yellow-500/20",
     textColor: "text-amber-600"
@@ -135,7 +137,7 @@ const ORGANIZATIONS = [
       "Created wireframes, prototypes, and micro-interaction flows.",
       "Conducted usability testing and iterative design refinement."
     ],
-    image: "/images/gdg_experience.png"
+    image: `${BASE}images/gdg_experience.png`
   },
   {
     organization: "Media Sistem Informasi Unsri",
@@ -148,7 +150,7 @@ const ORGANIZATIONS = [
       "Produced and edited video content for event documentation and promotional media.",
       "Created after-movie recap videos to summarize event activities and engagement."
     ],
-    image: "/images/media_experience.png"
+    image: `${BASE}images/media_experience.png`
   },
   {
     organization: "Intel Fasilkom Unsri",
@@ -161,7 +163,7 @@ const ORGANIZATIONS = [
       "Designed digital and printed media materials (proposal layouts, plaques, live report templates, pamphlets, banners).",
       "Produced and edited after-movie recap videos."
     ],
-    image: "/images/intel_experience.png"
+    image: `${BASE}images/intel_experience.png`
   },
   {
     organization: "Comnets Research Group",
@@ -174,7 +176,7 @@ const ORGANIZATIONS = [
       "Contributed to knowledge exchange on networking and technology topics.",
       "Served as Executive Committee member for the 6th Carnaval IMWORK 2024."
     ],
-    image: "/images/comnets_experience.png"
+    image: `${BASE}images/comnets_experience.png`
   }
 ];
 
@@ -467,7 +469,7 @@ export default function App() {
               className="snap-center shrink-0 w-[250px] md:w-[270px] lg:w-[240px] origin-bottom"
             >
               <img 
-                src="/images/Yappy Mockup.png" 
+                src={`${BASE}images/Yappy Mockup.png`}
                 alt="Yappy Mockup" 
                 className="w-full h-auto object-contain filter drop-shadow-[0_20px_25px_rgba(0,0,0,0.12)]" 
               />
@@ -484,7 +486,7 @@ export default function App() {
               className="snap-center shrink-0 w-[250px] md:w-[270px] lg:w-[240px] origin-bottom"
             >
               <img 
-                src="/images/Neurofit Mockup.png" 
+                src={`${BASE}images/Neurofit Mockup.png`}
                 alt="Neurofit Mockup" 
                 className="w-full h-auto object-contain filter drop-shadow-[0_20px_25px_rgba(0,0,0,0.12)]" 
               />
@@ -501,7 +503,7 @@ export default function App() {
               className="snap-center shrink-0 w-[250px] md:w-[270px] lg:w-[245px] origin-bottom z-30"
             >
               <img 
-                src="/images/Travelin Mockup.png" 
+                src={`${BASE}images/Travelin Mockup.png`}
                 alt="Travelin Mockup" 
                 className="w-full h-auto object-contain filter drop-shadow-[0_20px_25px_rgba(0,0,0,0.12)]" 
               />
@@ -518,7 +520,7 @@ export default function App() {
               className="snap-center shrink-0 w-[250px] md:w-[270px] lg:w-[240px] origin-bottom"
             >
               <img 
-                src="/images/PrimaPLus Mockup.png" 
+                src={`${BASE}images/PrimaPLus Mockup.png`}
                 alt="PrimaPlus Mockup" 
                 className="w-full h-auto object-contain filter drop-shadow-[0_20px_25px_rgba(0,0,0,0.12)]" 
               />
@@ -535,7 +537,7 @@ export default function App() {
               className="snap-center shrink-0 w-[250px] md:w-[270px] lg:w-[240px] origin-bottom"
             >
               <img 
-                src="/images/Fitmart Mockup.png" 
+                src={`${BASE}images/Fitmart Mockup.png`}
                 alt="FitMart Mockup" 
                 className="w-full h-auto object-contain filter drop-shadow-[0_20px_25px_rgba(0,0,0,0.12)]" 
               />
