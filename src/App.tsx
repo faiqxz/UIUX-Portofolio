@@ -1,19 +1,19 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "motion/react";
-import { 
-  ArrowUpRight, 
-  Github, 
-  Linkedin, 
-  Mail, 
-  Phone, 
-  Download, 
-  GraduationCap, 
-  BookOpen, 
-  Award, 
-  Layers, 
-  MessageSquare, 
-  ChevronDown, 
-  Clock, 
+import {
+  ArrowUpRight,
+  Github,
+  Linkedin,
+  Mail,
+  Phone,
+  Download,
+  GraduationCap,
+  BookOpen,
+  Award,
+  Layers,
+  MessageSquare,
+  ChevronDown,
+  Clock,
   Send,
   Sparkles,
   MapPin,
@@ -30,6 +30,16 @@ import DotGrid from "./components/DotGrid.tsx";
 const BASE = import.meta.env.BASE_URL;
 
 const PROJECTS = [
+  {
+    title: "Clairo",
+    category: "Teacher-in-the-Loop AI LMS Platform",
+    description: "A functional AI-native learning management platform for Kurikulum Merdeka with architectural teacher approval gates, 14 Gemini AI functions, and Edpuzzle-style interactive video studio.",
+    tags: ["Gemini AI Service Layer", "Teacher-in-the-Loop", "React 19 & Firebase"],
+    image: `${BASE}images/Clairo Mockup.png`,
+    link: "https://github.com/faiqxz",
+    accentColor: "from-indigo-500/20 to-purple-500/20",
+    textColor: "text-indigo-600"
+  },
   {
     title: "Yappy",
     category: "Language Learning Application",
@@ -93,6 +103,13 @@ const PROJECTS = [
 ];
 
 const EXPERIENCE = [
+  {
+    role: "Frontend Developer",
+    company: "RS UMMI (Electronic Medical Record System)",
+    period: "Aug 2026 - Present",
+    description: "Designed and developed enterprise EMR clinical forms (Discharge Planning RM 16.F, Inpatient Obstetric Initial Assessment) in CodeIgniter 3 and Bootstrap. Engineered a custom @media print layout engine with side-by-side signature alignment and page-break control.",
+    metrics: "Digitized 3 core clinical forms; reduced print layout rendering bugs to 0%."
+  },
   {
     role: "Property Manager & Designer",
     company: "Kos Nyaman",
@@ -184,15 +201,15 @@ const ORGANIZATIONS = [
 const SKILLS_CATEGORIES = [
   {
     title: "UX Research & Design",
-    skills: ["User Interviews", "Maze Usability Testing", "Design Thinking", "Information Architecture", "User Personas", "Wireframing", "High-Fidelity Prototyping", "Design Systems"]
+    skills: ["User Interviews", "Maze Usability Testing", "Design Thinking", "Information Architecture", "User Personas", "Wireframing", "High-Fidelity Prototyping", "Design Systems", "SUS Usability Analytics", "Print CSS (@media print)"]
   },
   {
     title: "AI-Native Workflow",
-    skills: ["Antigravity AI", "Claude API", "Gemini API", "Cursor", "Google Stitch", "v0 by Vercel"]
+    skills: ["Antigravity AI", "Google Gemini API", "Teacher-in-the-Loop AI", "Claude API", "OpenAI GPT", "v0 by Vercel", "Cursor", "Google Stitch"]
   },
   {
     title: "Development Stack",
-    skills: ["TypeScript", "React JS", "Next.js", "Vite", "Tailwind CSS", "HTML/CSS/JS", "Firebase", "SQL"]
+    skills: ["TypeScript", "React 19", "Next.js", "Vite", "Tailwind CSS v4", "CodeIgniter 3", "PHP", "Express.js", "Firebase Firestore", "SQL"]
   }
 ];
 
@@ -225,7 +242,8 @@ export default function App() {
   const [emailInput, setEmailInput] = useState("");
   const [subscribed, setSubscribed] = useState(false);
   const [isHireWidgetOpen, setIsHireWidgetOpen] = useState(false);
-  
+  const [showAllProjects, setShowAllProjects] = useState(false);
+
   const heroRef = useRef<HTMLElement>(null);
   const [isDesktop, setIsDesktop] = useState(false);
 
@@ -248,7 +266,7 @@ export default function App() {
   const yPhone3 = useTransform(scrollYProgress, [0, 1], [0, 10]);
   const yPhone4 = useTransform(scrollYProgress, [0, 1], [40, -60]);
   const yPhone5 = useTransform(scrollYProgress, [0, 1], [80, -120]);
-  
+
   // Custom contact form state
   const [contactForm, setContactForm] = useState({ name: "", email: "", message: "" });
   const [formSent, setFormSent] = useState(false);
@@ -283,7 +301,7 @@ export default function App() {
 
       {/* Background Mesh Orbs */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-        <motion.div 
+        <motion.div
           animate={{
             x: [0, 80, -40, 0],
             y: [0, -100, 50, 0],
@@ -292,7 +310,7 @@ export default function App() {
           transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
           className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-[#3B82F6]/5 to-[#8B5CF6]/5 blur-[120px]"
         />
-        <motion.div 
+        <motion.div
           animate={{
             x: [0, -60, 80, 0],
             y: [0, 80, -60, 0],
@@ -308,7 +326,7 @@ export default function App() {
         <a href="#" className="font-display text-xl font-bold tracking-tight text-[#1A1A1A]">
           FAIQ<span className="text-[#3B82F6]">.</span>
         </a>
-        
+
         {/* Desktop Links */}
         <div className="hidden md:flex gap-8 text-xs font-bold uppercase tracking-widest text-[#1A1A1A]/60">
           <a href="#work" className="hover:text-[#1A1A1A] transition-colors">Work</a>
@@ -318,7 +336,7 @@ export default function App() {
         </div>
 
         {/* Mobile Hamburger Button */}
-        <button 
+        <button
           onClick={() => setIsMenuOpen(!isMenuOpen)}
           className="md:hidden w-10 h-10 rounded-full bg-[#1A1A1A]/5 flex items-center justify-center relative focus:outline-none"
         >
@@ -333,7 +351,7 @@ export default function App() {
       {/* Fullscreen Mobile Menu Overlay */}
       <AnimatePresence>
         {isMenuOpen && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -354,7 +372,7 @@ export default function App() {
                 </motion.a>
               ))}
             </div>
-            
+
             {/* Social details at bottom of mobile nav */}
             <div className="absolute bottom-12 left-8 space-y-4">
               <span className="text-[10px] font-bold uppercase tracking-widest text-[#1A1A1A]/40">Let's Connect</span>
@@ -374,7 +392,7 @@ export default function App() {
       <section ref={heroRef} className="relative min-h-[145dvh] pt-32 pb-24 flex flex-col justify-start items-center px-4 lg:px-8 xl:px-12 w-full max-w-[1440px] mx-auto z-10 overflow-hidden">
         {/* Centered Hero Text */}
         <div className="flex flex-col items-center text-center max-w-4xl mx-auto space-y-8 mb-16">
-          <motion.span 
+          <motion.span
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
@@ -382,14 +400,14 @@ export default function App() {
           >
             <Sparkles className="w-3.5 h-3.5 text-[#3B82F6] fill-blue-100" /> Available for opportunities
           </motion.span>
-          
-          <motion.h1 
+
+          <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
             className="text-4xl md:text-5xl lg:text-7xl font-extrabold font-display leading-[1.1] tracking-tighter text-[#1A1A1A] max-w-4xl"
           >
-            <TrueFocus 
+            <TrueFocus
               sentence="UI Designer | & | product designer"
               separator=" | "
               manualMode={false}
@@ -401,7 +419,7 @@ export default function App() {
             />
           </motion.h1>
 
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }}
@@ -410,15 +428,15 @@ export default function App() {
             Hi, call me <span className="font-semibold text-[#1A1A1A]">Faiq</span>. I'm an Information Systems graduate (GPA 3.96, Cum Laude) specializing in human-centered UI/UX and AI-native design engineering.
           </motion.p>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut", delay: 0.6 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-6 w-full max-w-lg pt-2"
           >
             <form onSubmit={handleSubscribe} className="relative w-full p-1.5 bg-[#FFFFFF] border border-black/5 rounded-full double-bezel flex items-center justify-between shadow-sm focus-within:border-black/20 focus-within:shadow-md transition-all duration-300">
-              <input 
-                type="email" 
+              <input
+                type="email"
                 placeholder="your.email@domain.com"
                 value={emailInput}
                 onChange={(e) => setEmailInput(e.target.value)}
@@ -442,8 +460,8 @@ export default function App() {
               </StarBorder>
             </form>
 
-            <a 
-              href="https://drive.google.com/drive/folders/19sAP-y6eZ6nVmynZCHuWvek-VLisyvfa" 
+            <a
+              href="https://drive.google.com/drive/folders/19sAP-y6eZ6nVmynZCHuWvek-VLisyvfa"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#1A1A1A]/70 hover:text-[#1A1A1A] transition-colors border-b border-black/20 pb-0.5 shrink-0"
@@ -458,9 +476,9 @@ export default function App() {
           <div className="absolute w-[800px] h-[400px] rounded-full bg-[#3B82F6]/5 blur-[120px] pointer-events-none -top-10" />
 
           <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 px-6 pb-12 w-full max-w-full lg:overflow-visible lg:px-0 lg:pb-0 lg:justify-center lg:items-end lg:gap-4 xl:gap-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] relative z-20">
-            
+
             {/* Phone 1: Yappy (EdTech Conversational Speech) */}
-            <motion.div 
+            <motion.div
               style={{
                 y: isDesktop ? yPhone1 : 0,
                 rotate: isDesktop ? -6 : 0,
@@ -469,15 +487,15 @@ export default function App() {
               transition={{ type: "spring", stiffness: 80, damping: 20 }}
               className="snap-center shrink-0 w-[250px] md:w-[270px] lg:w-[240px] origin-bottom"
             >
-              <img 
+              <img
                 src={`${BASE}images/Yappy Mockup.png`}
-                alt="Yappy Mockup" 
-                className="w-full h-auto object-contain filter drop-shadow-[0_20px_25px_rgba(0,0,0,0.12)]" 
+                alt="Yappy Mockup"
+                className="w-full h-auto object-contain filter drop-shadow-[0_20px_25px_rgba(0,0,0,0.12)]"
               />
             </motion.div>
 
             {/* Phone 2: Neurofit (Workout Logger & Muscular Stats) */}
-            <motion.div 
+            <motion.div
               style={{
                 y: isDesktop ? yPhone2 : 0,
                 rotate: isDesktop ? -3 : 0,
@@ -486,15 +504,15 @@ export default function App() {
               transition={{ type: "spring", stiffness: 80, damping: 20 }}
               className="snap-center shrink-0 w-[250px] md:w-[270px] lg:w-[240px] origin-bottom"
             >
-              <img 
+              <img
                 src={`${BASE}images/Neurofit Mockup.png`}
-                alt="Neurofit Mockup" 
-                className="w-full h-auto object-contain filter drop-shadow-[0_20px_25px_rgba(0,0,0,0.12)]" 
+                alt="Neurofit Mockup"
+                className="w-full h-auto object-contain filter drop-shadow-[0_20px_25px_rgba(0,0,0,0.12)]"
               />
             </motion.div>
 
             {/* Phone 3: Travelin Mockup */}
-            <motion.div 
+            <motion.div
               style={{
                 y: isDesktop ? yPhone3 : 0,
                 rotate: 0,
@@ -503,15 +521,15 @@ export default function App() {
               transition={{ type: "spring", stiffness: 80, damping: 20 }}
               className="snap-center shrink-0 w-[250px] md:w-[270px] lg:w-[245px] origin-bottom z-30"
             >
-              <img 
+              <img
                 src={`${BASE}images/Travelin Mockup.png`}
-                alt="Travelin Mockup" 
-                className="w-full h-auto object-contain filter drop-shadow-[0_20px_25px_rgba(0,0,0,0.12)]" 
+                alt="Travelin Mockup"
+                className="w-full h-auto object-contain filter drop-shadow-[0_20px_25px_rgba(0,0,0,0.12)]"
               />
             </motion.div>
 
             {/* Phone 4: PrimaPlus (Health Directory Appointment Scheduler) */}
-            <motion.div 
+            <motion.div
               style={{
                 y: isDesktop ? yPhone4 : 0,
                 rotate: isDesktop ? 3 : 0,
@@ -520,15 +538,15 @@ export default function App() {
               transition={{ type: "spring", stiffness: 80, damping: 20 }}
               className="snap-center shrink-0 w-[250px] md:w-[270px] lg:w-[240px] origin-bottom"
             >
-              <img 
+              <img
                 src={`${BASE}images/PrimaPLus Mockup.png`}
-                alt="PrimaPlus Mockup" 
-                className="w-full h-auto object-contain filter drop-shadow-[0_20px_25px_rgba(0,0,0,0.12)]" 
+                alt="PrimaPlus Mockup"
+                className="w-full h-auto object-contain filter drop-shadow-[0_20px_25px_rgba(0,0,0,0.12)]"
               />
             </motion.div>
 
             {/* Phone 5: FitMart (Supplement Checkout Interface) */}
-            <motion.div 
+            <motion.div
               style={{
                 y: isDesktop ? yPhone5 : 0,
                 rotate: isDesktop ? 6 : 0,
@@ -537,10 +555,10 @@ export default function App() {
               transition={{ type: "spring", stiffness: 80, damping: 20 }}
               className="snap-center shrink-0 w-[250px] md:w-[270px] lg:w-[240px] origin-bottom"
             >
-              <img 
+              <img
                 src={`${BASE}images/Fitmart Mockup.png`}
-                alt="FitMart Mockup" 
-                className="w-full h-auto object-contain filter drop-shadow-[0_20px_25px_rgba(0,0,0,0.12)]" 
+                alt="FitMart Mockup"
+                className="w-full h-auto object-contain filter drop-shadow-[0_20px_25px_rgba(0,0,0,0.12)]"
               />
             </motion.div>
 
@@ -583,7 +601,7 @@ export default function App() {
 
         {/* Actual content: constrained to max-w-7xl */}
         <section className="relative z-10 py-32 px-4 lg:px-24 max-w-7xl mx-auto">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
@@ -603,15 +621,15 @@ export default function App() {
 
           {/* PROJECTS STACK - Alternating Layouts inspired by Behance */}
           <div className="space-y-40">
-            {PROJECTS.map((project, index) => {
+            {(showAllProjects ? PROJECTS : PROJECTS.slice(0, 3)).map((project, index) => {
               const isEven = index % 2 === 0;
               return (
-                <div 
+                <div
                   key={index}
                   className="grid lg:grid-cols-12 gap-16 items-center text-left"
                 >
                   {/* Project Details */}
-                  <motion.div 
+                  <motion.div
                     initial={{ opacity: 0, y: 40 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-100px" }}
@@ -622,7 +640,7 @@ export default function App() {
                     <div className="font-display text-6xl font-extrabold text-[#1A1A1A]/10 select-none">
                       0{index + 1}
                     </div>
-                    
+
                     <div className="flex flex-wrap gap-2">
                       {project.tags.map((tag, i) => (
                         <span key={i} className="text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-black/5 text-black/60">
@@ -646,12 +664,12 @@ export default function App() {
                         className="rounded-full shadow-md"
                         innerClassName="px-6 py-3 bg-[#1A1A1A] text-white hover:bg-neutral-800 text-xs font-bold uppercase tracking-wider rounded-full flex items-center gap-2 group cursor-pointer transition-colors"
                       >
-                        Read Case Study 
+                        Read Case Study
                         <div className="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
                           <ArrowUpRight className="w-3.5 h-3.5 text-white" />
                         </div>
                       </StarBorder>
-                      <a 
+                      <a
                         href={project.link}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -663,21 +681,21 @@ export default function App() {
                   </motion.div>
 
                   {/* Project Screen Showcase (Direct Phone Mockup) */}
-                  <motion.div 
+                  <motion.div
                     initial={{ opacity: 0, y: 50 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-100px" }}
                     transition={{ duration: 0.8, delay: 0.1 }}
                     className={`lg:col-span-6 flex justify-center ${!isEven ? "lg:order-1" : ""}`}
                   >
-                    <motion.div 
+                    <motion.div
                       whileHover={{ scale: 1.025, y: -8 }}
                       transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                      className="w-full max-w-[310px] select-none pointer-events-auto"
+                      className={`w-full ${project.title === 'Clairo' ? 'max-w-[580px]' : 'max-w-[310px]'} select-none pointer-events-auto`}
                     >
-                      <img 
-                        src={project.image} 
-                        alt={project.title} 
+                      <img
+                        src={project.image}
+                        alt={project.title}
                         className="w-full h-auto object-contain filter drop-shadow-[0_20px_25px_rgba(0,0,0,0.12)] hover:drop-shadow-[0_30px_35px_rgba(0,0,0,0.18)] transition-all duration-300"
                       />
                     </motion.div>
@@ -686,13 +704,36 @@ export default function App() {
               );
             })}
           </div>
+
+          {/* View More Projects Button */}
+          {PROJECTS.length > 3 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="flex justify-center pt-20"
+            >
+              <StarBorder
+                as="button"
+                onClick={() => setShowAllProjects(!showAllProjects)}
+                color="#3B82F6"
+                speed="4s"
+                thickness={1.5}
+                className="rounded-full shadow-lg"
+                innerClassName="px-8 py-4 bg-[#1A1A1A] text-white hover:bg-neutral-800 text-xs font-bold uppercase tracking-wider rounded-full flex items-center gap-3 cursor-pointer transition-colors"
+              >
+                <span>{showAllProjects ? "Show Fewer Projects" : `View More Projects (${PROJECTS.length - 3} More)`}</span>
+                <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${showAllProjects ? "rotate-180" : ""}`} />
+              </StarBorder>
+            </motion.div>
+          )}
         </section>
       </div>
 
       {/* Bento Grid (About Me) */}
       <section id="about" className="py-32 bg-black/[0.02] border-y border-black/5 px-4 lg:px-24 relative z-10">
         <div className="max-w-7xl mx-auto space-y-16">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
@@ -708,180 +749,180 @@ export default function App() {
             </p>
           </motion.div>
 
-            {/* Asymmetrical Bento Grid with MagicBento Spotlight & Effects */}
-            <MagicBento>
-              
-              {/* Bento Card 1: Academic Excellence (Size: col-span-7) */}
-              <motion.div 
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                className="md:col-span-7"
+          {/* Asymmetrical Bento Grid with MagicBento Spotlight & Effects */}
+          <MagicBento>
+
+            {/* Bento Card 1: Academic Excellence (Size: col-span-7) */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="md:col-span-7"
+            >
+              <MagicBentoCard
+                enableStars={true}
+                particleCount={6}
+                enableTilt={true}
+                enableMagnetism={true}
+                className="p-8 rounded-[2rem] bg-white border border-black/5 double-bezel text-left flex flex-col justify-between h-[300px] transition-all duration-300"
               >
-                <MagicBentoCard
-                  enableStars={true}
-                  particleCount={6}
-                  enableTilt={true}
-                  enableMagnetism={true}
-                  className="p-8 rounded-[2rem] bg-white border border-black/5 double-bezel text-left flex flex-col justify-between h-[300px] transition-all duration-300"
-                >
-                  <div className="flex justify-between items-start">
-                    <div className="w-12 h-12 rounded-2xl bg-emerald-500/5 text-emerald-600 flex items-center justify-center">
-                      <GraduationCap className="w-6 h-6 stroke-[1.5]" />
-                    </div>
-                    <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-500/10">
-                      GPA 3.96 / 4.00
-                    </span>
+                <div className="flex justify-between items-start">
+                  <div className="w-12 h-12 rounded-2xl bg-emerald-500/5 text-emerald-600 flex items-center justify-center">
+                    <GraduationCap className="w-6 h-6 stroke-[1.5]" />
                   </div>
-                  <div className="space-y-2">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-black/40 block">Education</span>
-                    <h3 className="text-2xl font-bold font-display tracking-tight text-[#1A1A1A]">Universitas Sriwijaya</h3>
-                    <p className="text-sm text-black/50 leading-relaxed font-light">
-                      S1 Information Systems (Cum Laude). Graduated in 3.5 years. Deep studies in Human-Computer Interaction (HCI), Software Engineering, and Database Systems.
-                    </p>
-                  </div>
-                </MagicBentoCard>
-              </motion.div>
+                  <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-500/10">
+                    GPA 3.96 / 4.00
+                  </span>
+                </div>
+                <div className="space-y-2">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-black/40 block">Education</span>
+                  <h3 className="text-2xl font-bold font-display tracking-tight text-[#1A1A1A]">Universitas Sriwijaya</h3>
+                  <p className="text-sm text-black/50 leading-relaxed font-light">
+                    S1 Information Systems (Cum Laude). Graduated in 3.5 years. Deep studies in Human-Computer Interaction (HCI), Software Engineering, and Database Systems.
+                  </p>
+                </div>
+              </MagicBentoCard>
+            </motion.div>
 
-              {/* Bento Card 2: Publications (Size: col-span-5) */}
-              <motion.div 
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.6, delay: 0.2 }}
-                className="md:col-span-5"
+            {/* Bento Card 2: Publications (Size: col-span-5) */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="md:col-span-5"
+            >
+              <MagicBentoCard
+                enableStars={true}
+                particleCount={6}
+                enableTilt={true}
+                enableMagnetism={true}
+                className="p-8 rounded-[2rem] bg-white border border-black/5 double-bezel text-left flex flex-col justify-between h-[300px] transition-all duration-300"
               >
-                <MagicBentoCard
-                  enableStars={true}
-                  particleCount={6}
-                  enableTilt={true}
-                  enableMagnetism={true}
-                  className="p-8 rounded-[2rem] bg-white border border-black/5 double-bezel text-left flex flex-col justify-between h-[300px] transition-all duration-300"
-                >
-                  <div className="w-12 h-12 rounded-2xl bg-blue-500/5 text-blue-600 flex items-center justify-center">
-                    <BookOpen className="w-6 h-6 stroke-[1.5]" />
+                <div className="w-12 h-12 rounded-2xl bg-blue-500/5 text-blue-600 flex items-center justify-center">
+                  <BookOpen className="w-6 h-6 stroke-[1.5]" />
+                </div>
+                <div className="space-y-4">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-black/40 block">Scientific Publications</span>
+                  <div className="space-y-3">
+                    {PUBLICATIONS.map((pub, idx) => (
+                      <a
+                        key={idx}
+                        href={pub.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="block group"
+                      >
+                        <h4 className="text-xs font-bold leading-snug group-hover:text-blue-600 transition-colors line-clamp-2">
+                          {pub.title} ↗
+                        </h4>
+                        <span className="text-[9px] text-black/40 mt-1 block">{pub.journal} · {pub.date}</span>
+                      </a>
+                    ))}
                   </div>
-                  <div className="space-y-4">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-black/40 block">Scientific Publications</span>
-                    <div className="space-y-3">
-                      {PUBLICATIONS.map((pub, idx) => (
-                        <a 
-                          key={idx}
-                          href={pub.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="block group"
-                        >
-                          <h4 className="text-xs font-bold leading-snug group-hover:text-blue-600 transition-colors line-clamp-2">
-                            {pub.title} ↗
-                          </h4>
-                          <span className="text-[9px] text-black/40 mt-1 block">{pub.journal} · {pub.date}</span>
-                        </a>
-                      ))}
-                    </div>
-                  </div>
-                </MagicBentoCard>
-              </motion.div>
+                </div>
+              </MagicBentoCard>
+            </motion.div>
 
-              {/* Bento Card 3: Skills Architecture (Size: col-span-8) */}
-              <motion.div 
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-                className="md:col-span-8"
+            {/* Bento Card 3: Skills Architecture (Size: col-span-8) */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="md:col-span-8"
+            >
+              <MagicBentoCard
+                enableStars={true}
+                particleCount={8}
+                enableTilt={true}
+                enableMagnetism={true}
+                className="p-8 rounded-[2rem] bg-white border border-black/5 double-bezel text-left flex flex-col justify-between min-h-[350px] transition-all duration-300"
               >
-                <MagicBentoCard
-                  enableStars={true}
-                  particleCount={8}
-                  enableTilt={true}
-                  enableMagnetism={true}
-                  className="p-8 rounded-[2rem] bg-white border border-black/5 double-bezel text-left flex flex-col justify-between min-h-[350px] transition-all duration-300"
-                >
-                  <div className="w-12 h-12 rounded-2xl bg-indigo-500/5 text-indigo-600 flex items-center justify-center">
-                    <Layers className="w-6 h-6 stroke-[1.5]" />
-                  </div>
-                  
-                  <div className="space-y-6 my-6">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-black/40 block">Technical Architecture</span>
-                    <div className="grid md:grid-cols-3 gap-6">
-                      {SKILLS_CATEGORIES.map((cat, idx) => (
-                        <div key={idx} className="space-y-3">
-                          <h4 className="text-[11px] font-bold uppercase tracking-wider text-black/60 border-b border-black/5 pb-1.5">{cat.title}</h4>
-                          <div className="flex flex-wrap gap-1">
-                            {cat.skills.map((sk, i) => (
-                              <span key={i} className="text-[9px] px-2 py-0.5 rounded-md bg-black/[0.03] text-black/70 font-semibold hover:bg-blue-500/5 hover:text-blue-600 transition-colors duration-200">{sk}</span>
-                            ))}
-                          </div>
+                <div className="w-12 h-12 rounded-2xl bg-indigo-500/5 text-indigo-600 flex items-center justify-center">
+                  <Layers className="w-6 h-6 stroke-[1.5]" />
+                </div>
+
+                <div className="space-y-6 my-6">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-black/40 block">Technical Architecture</span>
+                  <div className="grid md:grid-cols-3 gap-6">
+                    {SKILLS_CATEGORIES.map((cat, idx) => (
+                      <div key={idx} className="space-y-3">
+                        <h4 className="text-[11px] font-bold uppercase tracking-wider text-black/60 border-b border-black/5 pb-1.5">{cat.title}</h4>
+                        <div className="flex flex-wrap gap-1">
+                          {cat.skills.map((sk, i) => (
+                            <span key={i} className="text-[9px] px-2 py-0.5 rounded-md bg-black/[0.03] text-black/70 font-semibold hover:bg-blue-500/5 hover:text-blue-600 transition-colors duration-200">{sk}</span>
+                          ))}
                         </div>
-                      ))}
-                    </div>
+                      </div>
+                    ))}
                   </div>
+                </div>
 
-                  <div className="text-[10px] text-black/40 font-mono">
-                    Leveraging v0, Antigravity AI, and Claude API for accelerated design-to-code pipelines.
-                  </div>
-                </MagicBentoCard>
-              </motion.div>
+                <div className="text-[10px] text-black/40 font-mono">
+                  Leveraging v0, Antigravity AI, and Claude API for accelerated design-to-code pipelines.
+                </div>
+              </MagicBentoCard>
+            </motion.div>
 
-              {/* Bento Card 4: Accomplishments (Size: col-span-4) */}
-              <motion.div 
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                className="md:col-span-4"
+            {/* Bento Card 4: Accomplishments (Size: col-span-4) */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="md:col-span-4"
+            >
+              <MagicBentoCard
+                enableStars={true}
+                particleCount={6}
+                enableTilt={true}
+                enableMagnetism={true}
+                className="p-8 rounded-[2rem] bg-white border border-black/5 double-bezel text-left flex flex-col justify-between min-h-[350px] transition-all duration-300"
               >
-                <MagicBentoCard
-                  enableStars={true}
-                  particleCount={6}
-                  enableTilt={true}
-                  enableMagnetism={true}
-                  className="p-8 rounded-[2rem] bg-white border border-black/5 double-bezel text-left flex flex-col justify-between min-h-[350px] transition-all duration-300"
-                >
-                  <div className="w-12 h-12 rounded-2xl bg-amber-500/5 text-amber-600 flex items-center justify-center">
-                    <Award className="w-6 h-6 stroke-[1.5]" />
-                  </div>
-                  <div className="space-y-6 my-6">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-black/40 block">Credentials & Awards</span>
-                    <ul className="space-y-4">
-                      <li className="flex items-start gap-3">
-                        <span className="text-amber-500 text-xs mt-0.5">🏆</span>
-                        <div>
-                          <h4 className="text-xs font-bold leading-tight">3rd Place National UI/UX Design</h4>
-                          <span className="text-[9px] text-black/40 block">SI FEST Sriwijaya University 2024</span>
-                        </div>
-                      </li>
-                      <li className="flex items-start gap-3">
-                        <span className="text-indigo-500 text-xs mt-0.5">🌟</span>
-                        <div>
-                          <h4 className="text-xs font-bold leading-tight">Web Code Design Finalist</h4>
-                          <span className="text-[9px] text-black/40 block">IFFEST Sriwijaya University 2024</span>
-                        </div>
-                      </li>
-                      <li className="flex items-start gap-3">
-                        <span className="text-emerald-500 text-xs mt-0.5">🌍</span>
-                        <div>
-                          <h4 className="text-xs font-bold leading-tight">EF SET C2 Proficient & IELTS 6.5</h4>
-                          <span className="text-[9px] text-black/40 block">Demonstrated native English proficiency</span>
-                        </div>
-                      </li>
-                    </ul>
-                  </div>
-                  <div className="text-[10px] text-black/40 font-mono">
-                    MikroTik Certified Network Associate (MTCNA)
-                  </div>
-                </MagicBentoCard>
-              </motion.div>
+                <div className="w-12 h-12 rounded-2xl bg-amber-500/5 text-amber-600 flex items-center justify-center">
+                  <Award className="w-6 h-6 stroke-[1.5]" />
+                </div>
+                <div className="space-y-6 my-6">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-black/40 block">Credentials & Awards</span>
+                  <ul className="space-y-4">
+                    <li className="flex items-start gap-3">
+                      <span className="text-amber-500 text-xs mt-0.5">🏆</span>
+                      <div>
+                        <h4 className="text-xs font-bold leading-tight">3rd Place National UI/UX Design</h4>
+                        <span className="text-[9px] text-black/40 block">SI FEST Sriwijaya University 2024</span>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-indigo-500 text-xs mt-0.5">🌟</span>
+                      <div>
+                        <h4 className="text-xs font-bold leading-tight">Web Code Design Finalist</h4>
+                        <span className="text-[9px] text-black/40 block">IFFEST Sriwijaya University 2024</span>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-emerald-500 text-xs mt-0.5">🌍</span>
+                      <div>
+                        <h4 className="text-xs font-bold leading-tight">EF SET C2 Proficient & IELTS 6.5</h4>
+                        <span className="text-[9px] text-black/40 block">Demonstrated native English proficiency</span>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                <div className="text-[10px] text-black/40 font-mono">
+                  MikroTik Certified Network Associate (MTCNA)
+                </div>
+              </MagicBentoCard>
+            </motion.div>
 
-            </MagicBento>
+          </MagicBento>
         </div>
       </section>
 
       {/* Experience Section */}
       <section id="experience" className="py-32 px-4 lg:px-24 max-w-5xl mx-auto z-10 relative">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
@@ -904,7 +945,7 @@ export default function App() {
           {EXPERIENCE.map((exp, idx) => {
             const isExpanded = expandedExperience === idx;
             return (
-              <motion.div 
+              <motion.div
                 key={idx}
                 initial={{ opacity: 0, y: 25 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -929,8 +970,8 @@ export default function App() {
                       )}
                     </p>
                   </div>
-                  
-                  <motion.div 
+
+                  <motion.div
                     animate={{ rotate: isExpanded ? 180 : 0 }}
                     transition={{ type: "spring", stiffness: 200 }}
                     className="w-10 h-10 rounded-full bg-black/5 flex items-center justify-center"
@@ -952,7 +993,7 @@ export default function App() {
                         <p className="text-sm text-black/70 leading-relaxed font-light">
                           {exp.description}
                         </p>
-                        
+
                         <div className="p-4 rounded-2xl bg-emerald-500/5 text-emerald-700 text-xs font-semibold border border-emerald-500/10 flex items-start gap-2">
                           <span className="text-base leading-none">⚡</span>
                           <div>
@@ -972,7 +1013,7 @@ export default function App() {
 
       {/* Organizational Experience Section (Full-Bleed, Pop.site Style) */}
       <section id="organizations" className="py-32 w-full z-10 relative border-t border-black/5 bg-[#FAF9F6]">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-100px" }}
@@ -995,16 +1036,16 @@ export default function App() {
           {ORGANIZATIONS.map((org, idx) => {
             const isEven = idx % 2 === 0;
             return (
-              <div 
+              <div
                 key={idx}
                 className={`w-full flex flex-col ${isEven ? "lg:flex-row" : "lg:flex-row-reverse"} border-b border-black/5 relative group overflow-hidden`}
               >
                 {/* Image side (Full-bleed) */}
                 <div className="w-full lg:w-1/2 min-h-[350px] lg:min-h-[550px] relative overflow-hidden bg-neutral-950">
-                  <img 
-                    src={org.image} 
-                    alt={org.organization} 
-                    className="absolute inset-0 w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-700 ease-out scale-100 group-hover:scale-105" 
+                  <img
+                    src={org.image}
+                    alt={org.organization}
+                    className="absolute inset-0 w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-700 ease-out scale-100 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent lg:hidden" />
                 </div>
@@ -1052,43 +1093,43 @@ export default function App() {
       </section>
 
       {/* Floating Availability widget inspired by Behance */}
-        <motion.div 
-          className="fixed bottom-6 right-6 z-40 animate-none"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+      <motion.div
+        className="fixed bottom-6 right-6 z-40 animate-none"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <StarBorder
+          as="a"
+          href="https://wa.me/6287899677415"
+          target="_blank"
+          rel="noopener noreferrer"
+          color="#10B981"
+          speed="3.5s"
+          thickness={1.5}
+          className="rounded-full shadow-2xl"
+          innerClassName="px-5 py-3 bg-[#1A1A1A] hover:bg-neutral-800 text-white text-xs font-bold uppercase tracking-wider flex items-center gap-3.5 rounded-full cursor-pointer"
         >
-          <StarBorder
-            as="a"
-            href="https://wa.me/6287899677415"
-            target="_blank"
-            rel="noopener noreferrer"
-            color="#10B981"
-            speed="3.5s"
-            thickness={1.5}
-            className="rounded-full shadow-2xl"
-            innerClassName="px-5 py-3 bg-[#1A1A1A] hover:bg-neutral-800 text-white text-xs font-bold uppercase tracking-wider flex items-center gap-3.5 rounded-full cursor-pointer"
-          >
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-            </span>
-            Available for Hire
-          </StarBorder>
-        </motion.div>
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          Available for Hire
+        </StarBorder>
+      </motion.div>
 
       {/* Available for Hire Popup Modal Dialog */}
       <AnimatePresence>
         {isHireWidgetOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             {/* Backdrop */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsHireWidgetOpen(false)}
               className="absolute inset-0 bg-black/45 backdrop-blur-sm cursor-pointer"
             />
-            
+
             {/* Quick Form Card */}
             <motion.div
               initial={{ scale: 0.95, opacity: 0, y: 20 }}
@@ -1097,7 +1138,7 @@ export default function App() {
               transition={{ type: "spring", stiffness: 300, damping: 25 }}
               className="relative w-full max-w-md p-8 rounded-[2.5rem] bg-[#FAF9F6] text-[#1A1A1A] border border-black/5 double-bezel shadow-2xl z-10 text-left"
             >
-              <button 
+              <button
                 onClick={() => setIsHireWidgetOpen(false)}
                 className="absolute top-6 right-6 w-8 h-8 rounded-full bg-black/5 flex items-center justify-center hover:bg-black/10 transition-colors"
               >
@@ -1117,8 +1158,8 @@ export default function App() {
                 <form onSubmit={handleContactSubmit} className="space-y-4">
                   <div className="space-y-1">
                     <label className="text-[9px] font-bold uppercase tracking-wider text-black/40">Full Name</label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       placeholder="e.g. John Doe"
                       required
                       value={contactForm.name}
@@ -1128,8 +1169,8 @@ export default function App() {
                   </div>
                   <div className="space-y-1">
                     <label className="text-[9px] font-bold uppercase tracking-wider text-black/40">Email Address</label>
-                    <input 
-                      type="email" 
+                    <input
+                      type="email"
                       placeholder="e.g. john@domain.com"
                       required
                       value={contactForm.email}
@@ -1139,7 +1180,7 @@ export default function App() {
                   </div>
                   <div className="space-y-1">
                     <label className="text-[9px] font-bold uppercase tracking-wider text-black/40">Your Inquiry</label>
-                    <textarea 
+                    <textarea
                       rows={3}
                       placeholder="Brief description of project goals or role description..."
                       required
@@ -1149,8 +1190,8 @@ export default function App() {
                     />
                   </div>
 
-                  <button 
-                    type="submit" 
+                  <button
+                    type="submit"
                     className="w-full bg-[#1A1A1A] hover:bg-neutral-800 text-white py-4 rounded-2xl text-xs font-bold uppercase tracking-wider transition-colors shadow-md mt-2 flex items-center justify-center gap-2"
                   >
                     {formSent ? (
@@ -1169,7 +1210,7 @@ export default function App() {
       {/* Footer Contact */}
       <footer id="contact" className="bg-[#1A1A1A] text-[#FAF9F6] py-32 rounded-t-[3.5rem] relative z-10 overflow-hidden">
         <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
-        
+
         <div className="max-w-4xl mx-auto px-4 text-center space-y-20">
           <div className="space-y-6">
             <span className="text-[10px] font-bold font-mono uppercase tracking-[0.2.em] text-white/40 block">Connect & Collaborate</span>
@@ -1189,16 +1230,16 @@ export default function App() {
               </p>
               <p className="text-xs text-white/50">Palembang, South Sumatra, Indonesia</p>
             </div>
-            
+
             <div className="space-y-3 text-right md:text-right">
               <p className="text-[9px] font-mono font-bold uppercase tracking-[0.2em] text-white/40">Visual Networks</p>
               <div className="flex gap-4">
                 {SOCIAL_LINKS.map((soc, idx) => (
-                  <a 
-                    key={idx} 
-                    href={soc.url} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
+                  <a
+                    key={idx}
+                    href={soc.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 border border-white/5 flex items-center justify-center transition-colors"
                   >
                     <soc.icon className="w-4.5 h-4.5 text-white" />
@@ -1218,7 +1259,7 @@ export default function App() {
       {/* Case Study Detail Modal Overlay */}
       <AnimatePresence>
         {selectedProject && (
-          <CaseStudyModal 
+          <CaseStudyModal
             projectTitle={selectedProject}
             onClose={() => setSelectedProject(null)}
           />

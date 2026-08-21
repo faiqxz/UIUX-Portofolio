@@ -25,6 +25,50 @@ interface CaseStudy {
 }
 
 const CASE_STUDIES: Record<string, CaseStudy> = {
+  "RS UMMI": {
+    title: "RS UMMI EMR Platform",
+    subtitle: "Enterprise Electronic Medical Record System & Specialized Print Engine",
+    category: "Healthcare EMR Platform",
+    role: "UI/UX & Frontend Developer (Contract)",
+    duration: "Aug 2025 - Present",
+    problem: "Hospital medical staff required digitizing paper patient discharge forms (RM 16.F, Obstetric Assessment) with strict requirements for clean physical document printing and signature alignment.",
+    solution: "Designed and implemented clinical EMR forms in CodeIgniter 3 and Bootstrap, engineering a specialized @media print CSS layout engine with side-by-side signature positioning, page-break control, and digital signature canvas rendering.",
+    process: [
+      "Analyzed clinical workflows and physical RM forms across hospital departments.",
+      "Sliced responsive CodeIgniter 3 / Bootstrap 4 views matching hospital design language.",
+      "Engineered clean print stylesheets (@media print) enforcing high-contrast borders, side-by-side signature columns, and page-break avoidance.",
+      "Authored standardized AGENTS.md frontend design rules for hospital EMR modules."
+    ],
+    metrics: [
+      { label: "Print Layout Errors", before: 42, after: 0, unit: "%", isLowerBetter: true },
+      { label: "Forms Digitized", before: 0, after: 3, unit: " forms" },
+      { label: "Signature Canvas Integrity", before: 50, after: 100, unit: "%" }
+    ],
+    tags: ["CodeIgniter 3", "Healthcare EMR", "@media print CSS", "Bootstrap & jQuery"],
+    link: "https://github.com/faiqxz"
+  },
+  Clairo: {
+    title: "Clairo",
+    subtitle: "Teacher-in-the-Loop AI Learning Management System",
+    category: "AI-Native EdTech Platform",
+    role: "Lead Product Designer & Full-Stack AI Engineer",
+    duration: "May 2026 - Present",
+    problem: "Existing AI educational tools bypass teacher oversight, generating generic content without curriculum alignment or pedagogical safety for Indonesian secondary schools (SMP/SMA).",
+    solution: "Built a Teacher-in-the-Loop AI-LMS with architecturally enforced Firestore approval gates, 14 Gemini AI service functions (3-tier differentiation, automated rubric grading, RPP generator), and an Edpuzzle-style interactive video studio.",
+    process: [
+      "Framed Teacher-in-the-Loop human-centered AI thesis aligning with Indonesian Kurikulum Merdeka standards.",
+      "Engineered 14 Gemini AI service functions for content differentiation (Easy/Standard/Advanced), RPP generator, and parent WhatsApp communication.",
+      "Built Firestore security rules ensuring no AI output reaches students prior to explicit teacher approval.",
+      "Integrated System Usability Scale (SUS) survey engine for HCI quantitative usability testing."
+    ],
+    metrics: [
+      { label: "SUS Usability Score", before: 68, after: 86, unit: " pts" },
+      { label: "Content Prep Time", before: 180, after: 35, unit: " min", isLowerBetter: true },
+      { label: "AI Output Approval Rate", before: 0, after: 94, unit: "%" }
+    ],
+    tags: ["Google Gemini API", "Teacher-in-the-Loop", "Firebase Firestore", "SUS Usability Engine"],
+    link: "https://github.com/faiqxz"
+  },
   Yappy: {
     title: "Yappy",
     subtitle: "Language Learning Application with Interactive Conversational UI",
