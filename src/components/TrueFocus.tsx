@@ -45,18 +45,26 @@ const TrueFocus: React.FC<TrueFocusProps> = ({
 
   useEffect(() => {
     if (currentIndex === null || currentIndex === -1) return;
+    const container = containerRef.current;
+    if (!container) return;
 
-    if (!wordRefs.current[currentIndex] || !containerRef.current) return;
+    const measure = () => {
+      const word = wordRefs.current[currentIndex];
+      if (!word) return;
+      const parentRect = container.getBoundingClientRect();
+      const activeRect = word.getBoundingClientRect();
+      setFocusRect({
+        x: activeRect.left - parentRect.left,
+        y: activeRect.top - parentRect.top,
+        width: activeRect.width,
+        height: activeRect.height
+      });
+    };
 
-    const parentRect = containerRef.current.getBoundingClientRect();
-    const activeRect = wordRefs.current[currentIndex]!.getBoundingClientRect();
-
-    setFocusRect({
-      x: activeRect.left - parentRect.left,
-      y: activeRect.top - parentRect.top,
-      width: activeRect.width,
-      height: activeRect.height
-    });
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(container);
+    return () => ro.disconnect();
   }, [currentIndex, words.length]);
 
   const handleMouseEnter = (index: number) => {

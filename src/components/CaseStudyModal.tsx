@@ -222,7 +222,7 @@ export default function CaseStudyModal({ projectTitle, onClose }: CaseStudyModal
       {/* Backdrop overlay */}
       <div
         onClick={onClose}
-        className="absolute inset-0 bg-[#050505]/45 backdrop-blur-md cursor-zoom-out"
+        className="absolute inset-0 bg-black/60 lg:backdrop-blur-md cursor-zoom-out"
       />
 
       {/* Modal Panel sliding from right */}
@@ -231,16 +231,19 @@ export default function CaseStudyModal({ projectTitle, onClose }: CaseStudyModal
         animate={{ x: 0, opacity: 1 }}
         exit={{ x: "100%", opacity: 0.95 }}
         transition={{ type: "spring", damping: 32, stiffness: 240 }}
-        className="relative w-full max-w-4xl h-full bg-[#FAF9F6] text-[#1A1A1A] shadow-2xl flex flex-col z-10 overflow-y-auto no-scrollbar border-l border-black/5"
+        role="dialog"
+        aria-modal="true"
+        aria-label={project.title}
+        className="relative w-full max-w-4xl h-full bg-[#0E0C24] text-[#F6F1E7] shadow-2xl flex flex-col z-10 overflow-y-auto overscroll-contain no-scrollbar border-l border-white/10"
       >
         {/* Top Sticky Header */}
-        <div className="sticky top-0 bg-[#FAF9F6]/85 backdrop-blur-md z-30 px-8 py-6 border-b border-black/5 flex justify-between items-center">
-          <div className="flex items-center gap-3">
-            <span className="text-[10px] font-bold font-mono uppercase tracking-[0.2em] px-2.5 py-1 bg-[#1A1A1A]/5 rounded-full text-[#1A1A1A]/60">
+        <div className="sticky top-0 bg-[#0E0C24]/95 lg:bg-[#0E0C24]/85 lg:backdrop-blur-md z-30 px-5 sm:px-8 py-4 sm:py-6 border-b border-white/10 flex justify-between items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 min-w-0">
+            <span className="text-[10px] font-bold font-mono uppercase tracking-[0.2em] px-2.5 py-1 bg-white/[0.07] rounded-full text-[#F6F1E7]/65">
               {project.category}
             </span>
             {projectTitle === "Yappy" && (
-              <span className="text-[10px] font-bold font-mono uppercase tracking-[0.2em] px-2.5 py-1 bg-amber-500/10 text-amber-700 rounded-full flex items-center gap-1 border border-amber-500/20">
+              <span className="text-[10px] font-bold font-mono uppercase tracking-[0.2em] px-2.5 py-1 bg-[#FFC93C]/10 text-[#FFC93C] rounded-full flex items-center gap-1 border border-[#FFC93C]/25">
                 <Award className="w-3.5 h-3.5" /> Award Winner
               </span>
             )}
@@ -249,61 +252,62 @@ export default function CaseStudyModal({ projectTitle, onClose }: CaseStudyModal
             whileHover={{ rotate: 90, scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
             onClick={onClose}
-            className="w-10 h-10 rounded-full bg-black/5 hover:bg-black/10 flex items-center justify-center transition-colors"
+            aria-label="Close case study"
+            className="w-10 h-10 shrink-0 rounded-full bg-white/[0.08] hover:bg-[#FF3D81] hover:text-[#0A0915] flex items-center justify-center transition-colors"
           >
             <X className="w-5 h-5" />
           </motion.button>
         </div>
 
         {/* Core Content */}
-        <div className="px-8 lg:px-16 py-12 space-y-16 flex-1">
+        <div className="px-5 sm:px-8 lg:px-16 py-10 sm:py-12 space-y-12 sm:space-y-16 flex-1">
           {/* Header Title */}
           <div>
-            <h1 className="text-5xl lg:text-7xl font-bold font-display tracking-tight text-[#1A1A1A] leading-[1.05]">
+            <h1 className="text-6xl sm:text-7xl lg:text-8xl font-display uppercase leading-[0.9]">
               {project.title}
             </h1>
-            <p className="text-xl lg:text-2xl text-[#1A1A1A]/60 mt-4 leading-relaxed font-sans max-w-2xl font-light">
+            <p className="text-lg sm:text-xl lg:text-2xl text-[#F6F1E7]/60 mt-4 leading-relaxed font-sans max-w-2xl font-light">
               {project.subtitle}
             </p>
           </div>
 
           {/* Quick Meta Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-6 p-6 bg-black/[0.02] rounded-[1.5rem] border border-black/5">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 p-5 sm:p-6 bg-white/[0.04] rounded-[1.5rem] border border-white/10">
             <div>
-              <span className="block text-[10px] font-bold uppercase tracking-wider text-black/40">Role</span>
+              <span className="block text-[10px] font-bold uppercase tracking-wider text-[#F6F1E7]/40">Role</span>
               <span className="text-sm font-semibold mt-1 block">{project.role}</span>
             </div>
             <div>
-              <span className="block text-[10px] font-bold uppercase tracking-wider text-black/40">Timeline</span>
+              <span className="block text-[10px] font-bold uppercase tracking-wider text-[#F6F1E7]/40">Timeline</span>
               <span className="text-sm font-semibold mt-1 block">{project.duration}</span>
             </div>
             <div className="col-span-2 md:col-span-1">
-              <span className="block text-[10px] font-bold uppercase tracking-wider text-black/40">Deliverables</span>
+              <span className="block text-[10px] font-bold uppercase tracking-wider text-[#F6F1E7]/40">Deliverables</span>
               <div className="flex flex-wrap gap-1 mt-1.5">
                 {project.tags.slice(0, 3).map((tag, i) => (
-                  <span key={i} className="text-[10px] px-2 py-0.5 rounded bg-black/5 font-medium">{tag}</span>
+                  <span key={i} className="text-[10px] px-2 py-0.5 rounded bg-white/[0.07] text-[#F6F1E7]/80 font-medium">{tag}</span>
                 ))}
               </div>
             </div>
           </div>
 
           {/* Problem & Solution Split */}
-          <div className="grid md:grid-cols-2 gap-12 pt-4">
+          <div className="grid md:grid-cols-2 gap-10 md:gap-12 pt-4">
             <div className="space-y-4">
-              <div className="w-10 h-10 rounded-xl bg-red-500/5 text-red-600 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-[#FF3D81]/15 text-[#FF3D81] flex items-center justify-center">
                 <Activity className="w-5 h-5" />
               </div>
-              <h3 className="text-xl font-bold tracking-tight">The Challenge</h3>
-              <p className="text-sm text-black/60 leading-relaxed font-normal">
+              <h3 className="text-3xl font-display uppercase leading-none">The Challenge</h3>
+              <p className="text-sm text-[#F6F1E7]/65 leading-relaxed font-normal">
                 {project.problem}
               </p>
             </div>
             <div className="space-y-4">
-              <div className="w-10 h-10 rounded-xl bg-emerald-500/5 text-emerald-600 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-[#3DF2A6]/15 text-[#3DF2A6] flex items-center justify-center">
                 <CheckCircle className="w-5 h-5" />
               </div>
-              <h3 className="text-xl font-bold tracking-tight">The Solution</h3>
-              <p className="text-sm text-black/60 leading-relaxed font-normal">
+              <h3 className="text-3xl font-display uppercase leading-none">The Solution</h3>
+              <p className="text-sm text-[#F6F1E7]/65 leading-relaxed font-normal">
                 {project.solution}
               </p>
             </div>
@@ -311,17 +315,17 @@ export default function CaseStudyModal({ projectTitle, onClose }: CaseStudyModal
 
           {/* Design Process */}
           <div className="space-y-6 pt-4">
-            <h3 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-              <Smartphone className="w-6 h-6 stroke-[1.5]" /> Architectural UX Process
+            <h3 className="text-3xl sm:text-4xl font-display uppercase leading-none flex items-center gap-3">
+              <Smartphone className="w-7 h-7 stroke-[1.75] text-[#3DE3F2]" /> UX Process
             </h3>
-            <div className="relative border-l border-black/10 pl-6 ml-3 space-y-8">
+            <div className="relative border-l border-white/15 pl-6 ml-3 space-y-8">
               {project.process.map((step, i) => (
                 <div key={i} className="relative">
                   {/* Circle Node */}
-                  <div className="absolute -left-[31px] top-1.5 w-4.5 h-4.5 rounded-full bg-[#FAF9F6] border-2 border-black flex items-center justify-center">
-                    <span className="text-[8px] font-bold">{i + 1}</span>
+                  <div className="absolute -left-[33px] top-0.5 w-5 h-5 rounded-full bg-[#0E0C24] border-2 border-[#3DE3F2] text-[#3DE3F2] flex items-center justify-center">
+                    <span className="text-[9px] font-bold">{i + 1}</span>
                   </div>
-                  <p className="text-sm text-black/70 leading-relaxed">
+                  <p className="text-sm text-[#F6F1E7]/75 leading-relaxed">
                     {step}
                   </p>
                 </div>
@@ -332,28 +336,28 @@ export default function CaseStudyModal({ projectTitle, onClose }: CaseStudyModal
           {/* Verification & Metrics Charts */}
           <div className="space-y-8 pt-4">
             <div>
-              <h3 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-                <Clock className="w-6 h-6 stroke-[1.5]" /> Maze Usability Testing Metrics
+              <h3 className="text-3xl sm:text-4xl font-display uppercase leading-none flex items-center gap-3">
+                <Clock className="w-7 h-7 stroke-[1.75] text-[#FFC93C]" /> Maze Testing Metrics
               </h3>
-              <p className="text-sm text-black/40 mt-1">
+              <p className="text-sm text-[#F6F1E7]/45 mt-2">
                 Quantitative improvements validated via task-based analytics between testing phases.
               </p>
             </div>
 
             {/* Bar charts visualization */}
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
               {project.metrics.map((metric, idx) => {
-                const percentDiff = metric.isLowerBetter 
+                const percentDiff = metric.isLowerBetter
                   ? ((metric.before - metric.after) / metric.before) * 100
                   : ((metric.after - metric.before) / metric.before) * 100;
-                
+
                 return (
-                  <div key={idx} className="p-6 rounded-[2rem] bg-white border border-black/5 double-bezel flex flex-col justify-between">
+                  <div key={idx} className="p-5 sm:p-6 rounded-[1.5rem] sm:rounded-[2rem] bg-white/[0.04] border border-white/10 flex flex-col justify-between">
                     <div>
-                      <span className="text-xs font-bold text-black/40 block mb-1">{metric.label}</span>
+                      <span className="text-xs font-bold text-[#F6F1E7]/45 block mb-1">{metric.label}</span>
                       <div className="flex items-baseline gap-2">
-                        <span className="text-3xl font-bold font-display">{metric.after}{metric.unit}</span>
-                        <span className="text-xs text-black/30 line-through">from {metric.before}</span>
+                        <span className="text-4xl font-display">{metric.after}{metric.unit}</span>
+                        <span className="text-xs text-[#F6F1E7]/35 line-through">from {metric.before}</span>
                       </div>
                     </div>
 
@@ -361,24 +365,24 @@ export default function CaseStudyModal({ projectTitle, onClose }: CaseStudyModal
                     <div className="my-6 h-16 w-full flex items-end gap-4 px-2">
                       {/* Before Bar */}
                       <div className="flex-1 flex flex-col items-center gap-1.5">
-                        <div className="w-full bg-black/10 rounded-t-sm h-12" />
-                        <span className="text-[8px] font-bold text-black/30">Phase 1</span>
+                        <div className="w-full bg-white/10 rounded-t-sm h-12" />
+                        <span className="text-[8px] font-bold text-[#F6F1E7]/35">Phase 1</span>
                       </div>
-                      
+
                       {/* After Bar */}
                       <div className="flex-1 flex flex-col items-center gap-1.5">
-                        <motion.div 
+                        <motion.div
                           initial={{ height: 0 }}
                           whileInView={{ height: `${(metric.after / Math.max(metric.before, metric.after)) * 48}px` }}
                           viewport={{ once: true }}
                           transition={{ type: "spring", stiffness: 100, delay: 0.15 * idx }}
-                          className={`w-full rounded-t-sm ${metric.isLowerBetter ? "bg-amber-500" : "bg-emerald-500"}`}
+                          className={`w-full rounded-t-sm ${metric.isLowerBetter ? "bg-[#FFC93C]" : "bg-[#3DE3F2]"}`}
                         />
-                        <span className="text-[8px] font-bold text-black/50">Phase 2</span>
+                        <span className="text-[8px] font-bold text-[#F6F1E7]/55">Phase 2</span>
                       </div>
                     </div>
 
-                    <div className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-full w-fit self-start flex items-center gap-1 border border-emerald-500/10">
+                    <div className="text-[10px] font-bold text-[#3DF2A6] bg-[#3DF2A6]/10 px-3 py-1.5 rounded-full w-fit self-start flex items-center gap-1 border border-[#3DF2A6]/20">
                       {metric.isLowerBetter ? "Reduced" : "Improved"} by {percentDiff.toFixed(0)}%
                     </div>
                   </div>
@@ -395,14 +399,14 @@ export default function CaseStudyModal({ projectTitle, onClose }: CaseStudyModal
               rel="noopener noreferrer"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="w-full bg-[#1A1A1A] hover:bg-[#2A2A2A] text-white p-6 rounded-[2rem] flex items-center justify-between group transition-colors shadow-lg"
+              className="w-full bg-[#FF3D81] hover:bg-[#FF5C96] text-[#0A0915] p-5 sm:p-6 rounded-[1.5rem] sm:rounded-[2rem] flex items-center justify-between gap-4 group transition-colors"
             >
               <div className="text-left">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-white/50 block">Full Presentation</span>
-                <span className="text-lg font-bold mt-1 block">View Figma Presentation Deck</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-[#0A0915]/60 block">Full Presentation</span>
+                <span className="text-2xl sm:text-3xl font-display uppercase leading-none mt-1.5 block">View Figma Deck</span>
               </div>
-              <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-white/20 transition-colors">
-                <ArrowUpRight className="w-5 h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+              <div className="w-12 h-12 shrink-0 rounded-full bg-[#0A0915] text-[#F6F1E7] flex items-center justify-center">
+                <ArrowUpRight className="w-5 h-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
               </div>
             </motion.a>
           </div>

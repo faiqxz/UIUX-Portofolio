@@ -48,6 +48,13 @@
   box-sizing: border-box;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .border-gradient-bottom,
+  .border-gradient-top {
+    animation: none;
+  }
+}
+
 @keyframes star-movement-bottom {
   0% {
     transform: translate(0%, 0%);
