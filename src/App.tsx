@@ -297,7 +297,8 @@ export default function App() {
   const heroRef = useRef<HTMLElement>(null);
   const launchRef = useRef<HTMLElement>(null);
   // Read the breakpoint synchronously so desktop doesn't render the mobile layout first and then jump.
-  const [isDesktop, setIsDesktop] = useState(() => window.matchMedia("(min-width: 1024px)").matches);
+  // (Guarded so the page can also be prerendered to static HTML at build time, where there is no window.)
+  const [isDesktop, setIsDesktop] = useState(() => typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches);
 
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 1024px)");
@@ -468,28 +469,34 @@ export default function App() {
           <Floaty className="right-[30%] top-[30%] hidden md:block" duration={7} delay={0.3}><Dot color={C.cyan} size={9} /></Floaty>
 
           <div className="relative z-10 mx-auto max-w-[1440px] px-4 text-center">
-            <motion.p
+            {/* The page's h1 is the name + role (what people and search engines look for); the big line below is a tagline. */}
+            <motion.h1
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="font-mono text-[11px] font-bold uppercase tracking-[0.24em] text-cream/70"
+              className="font-mono text-[11px] font-bold uppercase leading-relaxed tracking-[0.24em] text-cream/70"
             >
-              Al Ikhsan Faiq <span className="text-hot">/</span> UI/UX &amp; Product Designer
-            </motion.p>
+              <span className="block sm:inline">Al Ikhsan Faiq</span>
+              <span className="hidden text-hot sm:inline"> / </span>
+              <span className="block sm:inline">Design Engineer</span>
+              <span className="hidden text-hot sm:inline"> · </span>
+              <span className="block sm:inline">
+                UI/UX <span className="text-hot">·</span> Frontend <span className="text-hot">·</span> AI
+              </span>
+            </motion.h1>
 
-            <motion.h1
+            <motion.p
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
               style={{ y: isDesktop ? headlineY : 0 }}
               className="mt-5 font-display text-[clamp(3.6rem,15vw,13rem)] uppercase leading-[0.86]"
             >
-              <span className="block">UI/UX that</span>
+              <span className="block">Design that</span>
               <span className="block">
                 <span className="text-hot">takes</span> <span className="text-outline">off.</span>
               </span>
-            </motion.h1>
-            <h2 className="sr-only">Al Ikhsan Faiq — UI Designer &amp; Product Designer</h2>
+            </motion.p>
           </div>
 
           {/* 5-phone fan, overlapping the headline like a sticker punched through the type */}
@@ -531,10 +538,12 @@ export default function App() {
               <p className="text-3xl font-semibold leading-[1.15] tracking-tight md:text-4xl">
                 Human-centered UI/UX,
                 <br />
-                <span className="text-cyan">AI-native</span> engineering.
+                <span className="text-cyan">AI-native</span> design engineering.
               </p>
               <p className="mt-5 max-w-lg text-base font-light leading-relaxed text-cream/65 md:text-lg">
-                Hi, call me <span className="font-semibold text-cream">Faiq</span>. I'm an Information Systems graduate (GPA 3.96, Cum Laude) specializing in human-centered UI/UX and AI-native design engineering.
+                Hi, I'm <span className="font-semibold text-cream">Al Ikhsan Faiq</span>, but call me Faiq. I design and build: user research and
+                prototypes in Figma, production frontends in React and TypeScript, and AI features built in from day one. Information Systems
+                graduate, GPA 3.96 Cum Laude.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <a href="#work" className="btn btn-hot">
@@ -1169,7 +1178,7 @@ export default function App() {
               <span className="text-hot">that flies.</span>
             </motion.h2>
             <p className="mx-auto mt-8 max-w-md text-sm font-medium leading-relaxed text-ink/75 md:text-base">
-              Always open to discussing design systems, advanced prototypes, research audits, or digital product directions.
+              Always open to talking UI/UX, design systems, frontend builds or AI-powered product ideas.
             </p>
             <div className="mt-10 flex flex-wrap justify-center gap-3">
               <a href="mailto:faiqsc@gmail.com" className="btn btn-ink">

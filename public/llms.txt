@@ -1,0 +1,46 @@
+# Al Ikhsan Faiq
+
+> Al Ikhsan Faiq (Faiq) is a design engineer from Palembang, Indonesia, specializing in human-centered UI/UX and AI-native design engineering. Faiq works across the whole product: user research and prototypes in Figma, production frontends in React and TypeScript, and AI features built in from the start. Information Systems graduate (GPA 3.96, Cum Laude) from Universitas Sriwijaya.
+
+Portfolio: __SITE_URL__
+Open to full-time roles, freelance projects and collaborations in UI/UX design, frontend development and AI-powered products.
+
+## Focus areas
+
+- Human-centered UI/UX: user interviews, information architecture, wireframes, high-fidelity prototypes, design systems, Maze usability testing, SUS analytics
+- Frontend engineering: TypeScript, React 19, Next.js, Vite, Tailwind CSS v4, Firebase, Express.js, CodeIgniter 3 / PHP, SQL, print CSS
+- AI-native design engineering: Google Gemini API, Claude API, OpenAI GPT, teacher-in-the-loop AI, v0, Cursor, Google Stitch, Antigravity AI
+
+## Experience
+
+- Frontend Developer, RS UMMI Electronic Medical Record System (Aug 2026 to present): designed and built enterprise EMR clinical forms in CodeIgniter 3 and Bootstrap, including a custom print layout engine.
+- Property Manager & Designer, Kos Nyaman (Sep 2024 to present): built and deployed a responsive property rental platform in React (https://kos-nyaman.vercel.app/); developing an occupancy dashboard with Firebase and an LLM support chatbot.
+- Community Service Lead, Website Design Training, LPPM Universitas Sriwijaya (Aug to Oct 2025): taught 20+ teachers to build educational web interfaces with AI-assisted UI tools.
+- Lab Assistant, Computer Networking Lab, Universitas Sriwijaya (Aug 2024 to Mar 2025).
+- UI/UX Designer Intern, PT Bukit Asam Tbk (Jun to Jul 2024): designed end-to-end Figma interfaces for the CISEA sub-application and the APLB LB3 waste management system.
+
+## Selected projects
+
+- Clairo: AI-native learning management platform for Kurikulum Merdeka with teacher approval gates, 14 Gemini AI functions and an interactive video studio (React 19, Firebase).
+- Yappy: AI-native language learning app with conversational scenarios and voice interfaces; 3rd place, National UI/UX Design Competition, SI FEST 2024.
+- Neurofit: workout logging app with progressive overload tracking and muscle analytics, validated with Maze.
+- PrimaPlus: digital health consultation app with medical directories and patient records.
+- FitMart: combined e-commerce and workout tracking app.
+- Travelin: flight and lodging booking app with a simple reschedule and refund flow (GDGoC challenge).
+- UNSRI GO: campus app for Universitas Sriwijaya students (course registration, shuttle tracking, exam schedules).
+
+## Education, awards and publications
+
+- S1 Information Systems, Universitas Sriwijaya: Cum Laude, GPA 3.96, graduated in 3.5 years.
+- 3rd Place, National UI/UX Design Competition, SI FEST 2024, Universitas Sriwijaya.
+- Finalist, Web Code Design, IFFEST 2024, Universitas Sriwijaya.
+- English: EF SET C2 Proficient, IELTS 6.5.
+- "Hybrid Fine-Tuning of IndoBERT and Ensemble TF-IDF Logistic Regression for Sentiment Analysis of Zalora App Reviews", Rabit: Jurnal Teknologi dan Sistem Informasi Univrab (Jan 2026).
+- "Detecting User Sentiment of Application X Towards the Free Lunch Work Program Using LSTM", JATI (Jurnal Teknologi dan Informasi) (May 2025).
+
+## Links
+
+- Portfolio: __SITE_URL__
+- LinkedIn: https://www.linkedin.com/in/alikhsanfaiq/
+- GitHub: https://github.com/faiqxz
+- Email: faiqsc@gmail.com

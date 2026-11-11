@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<!-- Source of public/og-image.jpg (1200x630). Regenerate with headless Chrome, then convert to JPEG:
+     chrome --headless=new --hide-scrollbars --window-size=1200,630 --virtual-time-budget=12000 --allow-file-access-from-files --screenshot=og.png scripts/og-image.html -->
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Plus+Jakarta+Sans:wght@500;600&family=JetBrains+Mono:wght@700&display=block" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    position: relative; color: #F6F1E7;
+    background: radial-gradient(110% 95% at 72% 0%, #3123B5 0%, #1A1360 42%, #120D45 72%, #0F0B3A 100%);
+    font-family: "Plus Jakarta Sans", sans-serif;
+  }
+  .stars { position: absolute; inset: 0; opacity: .7;
+    background-image:
+      radial-gradient(1.6px 1.6px at 40px 60px, #fff 50%, transparent 51%),
+      radial-gradient(1.2px 1.2px at 130px 150px, #B3A9FF 50%, transparent 51%),
+      radial-gradient(1.4px 1.4px at 210px 40px, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 90px 210px, #fff 50%, transparent 51%);
+    background-size: 260px 240px; }
+  .glow { position: absolute; right: 40px; top: 60px; width: 640px; height: 520px; border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(108,92,255,.5) 0%, transparent 66%); }
+  .copy { position: absolute; left: 72px; top: 66px; width: 700px; }
+  .mono { font-family: "JetBrains Mono", monospace; font-weight: 700; font-size: 19px; letter-spacing: .22em; text-transform: uppercase; color: rgba(246,241,231,.75); line-height: 1.6; }
+  .mono b { color: #FF3D81; font-weight: 700; }
+  .name { color: #F6F1E7; font-size: 24px; }
+  h1 { margin-top: 24px; font-family: Anton, sans-serif; font-weight: 400; font-size: 122px; line-height: .86; white-space: nowrap; text-transform: uppercase; }
+  .hot { color: #FF3D81; }
+  .outline { color: transparent; -webkit-text-stroke: 3px #F6F1E7; }
+  .sub { margin-top: 28px; font-size: 28px; font-weight: 600; line-height: 1.3; }
+  .cyan { color: #3DE3F2; }
+  .phones { position: absolute; right: 22px; top: 92px; width: 470px; height: 600px; }
+  .phones img { position: absolute; width: 230px; filter: drop-shadow(0 24px 40px rgba(0,0,0,.45)); }
+  .p1 { left: 0; top: 70px; transform: rotate(-8deg) scale(.88); transform-origin: bottom center; }
+  .p3 { right: 0; top: 70px; transform: rotate(8deg) scale(.88); transform-origin: bottom center; }
+  .p2 { left: 120px; top: 0; z-index: 2; }
+  .cloud { position: absolute; left: 0; bottom: -2px; width: 1200px; height: 84px; z-index: 3; }
+  .logo { position: absolute; left: 72px; bottom: 34px; z-index: 4; font-family: Anton, sans-serif; font-size: 34px; letter-spacing: .02em; }
+  .ring { position: absolute; left: 1100px; top: 40px; width: 44px; height: 44px; border: 5px solid #FF3D81; border-radius: 50%; }
+  .sq { position: absolute; left: 640px; top: 300px; width: 30px; height: 30px; border: 5px solid #FFC93C; border-radius: 4px; transform: rotate(18deg); }
+</style>
+</head>
+<body>
+  <div class="stars"></div>
+  <div class="glow"></div>
+  <div class="ring"></div>
+  <div class="sq"></div>
+  <div class="copy">
+    <div class="mono"><span class="name">Al Ikhsan Faiq</span><br>Design Engineer <b>·</b> UI/UX <b>·</b> Frontend <b>·</b> AI</div>
+    <h1>Design that<br><span class="hot">takes</span> <span class="outline">off.</span></h1>
+    <div class="sub">Human-centered UI/UX &amp;<br><span class="cyan">AI-native</span> design engineering.</div>
+  </div>
+  <div class="phones">
+    <img class="p1" src="../public/images/yappy-mockup.webp">
+    <img class="p3" src="../public/images/neurofit-mockup.webp">
+    <img class="p2" src="../public/images/travelin-mockup.webp">
+  </div>
+  <svg class="cloud" viewBox="0 0 1200 120" preserveAspectRatio="none">
+    <g fill="#4A3DC4" opacity=".35">
+      <circle cx="60" cy="70" r="46"/><circle cx="180" cy="62" r="54"/><circle cx="320" cy="74" r="44"/><circle cx="470" cy="66" r="52"/>
+      <circle cx="620" cy="76" r="40"/><circle cx="760" cy="60" r="56"/><circle cx="910" cy="72" r="46"/><circle cx="1060" cy="62" r="54"/><circle cx="1180" cy="74" r="40"/>
+    </g>
+    <g fill="#0A0915">
+      <circle cx="0" cy="110" r="44"/><circle cx="110" cy="104" r="40"/><circle cx="230" cy="112" r="46"/><circle cx="360" cy="106" r="38"/>
+      <circle cx="480" cy="112" r="44"/><circle cx="610" cy="104" r="40"/><circle cx="740" cy="112" r="46"/><circle cx="870" cy="106" r="40"/>
+      <circle cx="1000" cy="112" r="44"/><circle cx="1120" cy="104" r="42"/><circle cx="1210" cy="110" r="40"/>
+      <rect x="0" y="108" width="1200" height="20"/>
+    </g>
+  </svg>
+</body>
+</html>
