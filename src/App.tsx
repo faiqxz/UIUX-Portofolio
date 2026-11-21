@@ -1,124 +1,112 @@
-import React, { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence, MotionConfig, useScroll, useTransform } from "motion/react";
-import {
-  ArrowUpRight,
-  ArrowDown,
-  Github,
-  Linkedin,
-  Mail,
-  Phone,
-  Download,
-  GraduationCap,
-  BookOpen,
-  Award,
-  Layers,
-  ChevronDown,
-  Send,
-  Sparkles,
-  Rocket
-} from "lucide-react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
+import { motion, AnimatePresence, MotionConfig } from "motion/react";
 import CaseStudyModal from "./components/CaseStudyModal.tsx";
-import MagicBento, { MagicBentoCard } from "./components/MagicBento.tsx";
-import DotGrid from "./components/DotGrid.tsx";
-import RocketJourney from "./components/RocketJourney.tsx";
-import OutlineStack from "./components/OutlineStack.tsx";
-import { Squiggle, Zigzag, Ring, Square, Arc, Plus, Dot, Capsule, Burst, Floaty, SpinBadge, CloudBank } from "./components/Doodles.tsx";
+import AsciiCanvas from "./ascii/AsciiCanvas.tsx";
+import AsciiText, { AsciiLine } from "./ascii/AsciiText.tsx";
+import AsciiImage from "./ascii/AsciiImage.tsx";
+import AsciiJourney from "./ascii/AsciiJourney.tsx";
+import BootSequence, { bootWillPlay } from "./ascii/BootSequence.tsx";
+import Frame from "./ascii/Frame.tsx";
+import Typed from "./ascii/Typed.tsx";
+import { auroraLaunch, field, liftoff } from "./ascii/scenes.ts";
 
 const BASE = import.meta.env.BASE_URL;
+const ROCKET_IMG = `${BASE}images/rocket-hero.webp`;
 
-const C = {
-  ink: "#0A0915",
-  night: "#15114A",
-  deep: "#100E28",
-  electric: "#6C5CFF",
-  hot: "#FF3D81",
-  cyan: "#3DE3F2",
-  sun: "#FFC93C",
-  mint: "#3DF2A6",
-  orange: "#FF8A3D",
-  cream: "#F6F1E7"
+/** Accent colours (match --color-* in index.css). */
+const A = {
+  aurora: "#7CF0A0",
+  teal: "#6FE3D2",
+  violet: "#C08CF0",
+  amber: "#FFC86B",
+  rose: "#FF6FA8"
 };
+
+// Gradient stops for the halftone headlines (snapped to the renderer's palette).
+const G_WHITE = ["#9aabcf", "#e9eefb"];
+const G_AURORA = ["#74eb9b", "#79e3d3", "#b985e0"];
+const G_WARM = ["#ffd27a", "#ffa743", "#ff5c9a"];
+const G_VIOLET = ["#b985e0", "#ff5c9a"];
+const G_TEAL = ["#79e3d3", "#74eb9b"];
 
 const PROJECTS = [
   {
     title: "Clairo",
+    slug: "clairo",
     category: "Teacher-in-the-Loop AI LMS Platform",
     description: "A functional AI-native learning management platform for Kurikulum Merdeka with architectural teacher approval gates, 14 Gemini AI functions, and Edpuzzle-style interactive video studio.",
     tags: ["Gemini AI Service Layer", "Teacher-in-the-Loop", "React 19 & Firebase"],
     image: `${BASE}images/clairo-mockup.webp`,
     imageSize: [1024, 617],
     link: "https://github.com/faiqxz",
-    accent: C.electric
+    accent: A.violet
   },
   {
     title: "Yappy",
+    slug: "yappy",
     category: "Language Learning Application",
     description: "3rd Place winner at UIUX Competition. An AI-native language app integrating interactive conversational scenarios and Maze-validated voice interfaces.",
     tags: ["Award Winning", "Conversational AI", "Maze Testing"],
     image: `${BASE}images/yappy-mockup.webp`,
     imageSize: [600, 1180],
     link: "https://bit.ly/YappyPPT",
-    accent: C.sun
+    accent: A.amber
   },
   {
     title: "Neurofit",
+    slug: "neurofit",
     category: "Fitness Mobile Application",
     description: "A structured workout logs app designed from problem definition to Maze validation, supporting progressive overload tracking and muscle analytics.",
     tags: ["UX Research", "Design System", "Data Visualization"],
     image: `${BASE}images/neurofit-mockup.webp`,
     imageSize: [600, 1180],
     link: "https://bit.ly/NeurofitPPT",
-    accent: C.cyan
+    accent: A.teal
   },
   {
     title: "PrimaPlus",
+    slug: "primaplus",
     category: "Health Consultant Application",
     description: "A digital health platform streamlining medical directories and patient consulting records, mapping clinical user flows for high accessibility.",
     tags: ["Information Architecture", "HealthTech", "Figma Components"],
     image: `${BASE}images/primaplus-mockup.webp`,
     imageSize: [600, 1180],
     link: "https://bit.ly/PrimaPLus",
-    accent: C.mint
+    accent: A.aurora
   },
   {
     title: "FitMart",
+    slug: "fitmart",
     category: "E-Commerce & Workout App",
     description: "An integrated e-commerce shop and workout mobile prototype mapping seamless navigation across supplementation shopping and fitness logging.",
     tags: ["UI/UX Design", "Cross-Domain Flows", "Maze Usability"],
     image: `${BASE}images/fitmart-mockup.webp`,
     imageSize: [600, 1180],
     link: "https://bit.ly/Prototype-FitMart",
-    accent: C.hot
+    accent: A.rose
   },
   {
     title: "Travelin",
+    slug: "travelin",
     category: "Integrated Travel & Booking App",
     description: "GDGoC Mobile application streamlining joint flight and lodging reservations with a simplified, transparent rescheduling and refund management system.",
     tags: ["GDGoC Challenge", "Travel Booking", "Reschedule & Refund Flow"],
     image: `${BASE}images/travelin-mockup.webp`,
     imageSize: [600, 1180],
     link: "https://bitly.cx/Travelin",
-    accent: C.orange
+    accent: A.amber
   },
   {
     title: "UNSRI GO",
+    slug: "unsri-go",
     category: "Academic Portal & Campus Assistant",
     description: "An academic mobile application for Universitas Sriwijaya students, organizing course registrations, real-time campus shuttle tracking, and exam schedules.",
     tags: ["EdTech", "Campus Services", "Mobile Portal"],
     image: `${BASE}images/unsri-go-mockup.webp`,
     imageSize: [600, 1180],
     link: "https://unsri.ac.id",
-    accent: C.sun
+    accent: A.teal
   }
-];
-
-// Hero fan of phones. `tilt`/`scale` only apply on desktop where the parallax runs.
-const HERO_PHONES = [
-  { src: `${BASE}images/yappy-mockup.webp`, alt: "Yappy app mockup", tilt: -6, scale: 0.85 },
-  { src: `${BASE}images/neurofit-mockup.webp`, alt: "Neurofit app mockup", tilt: -3, scale: 0.92 },
-  { src: `${BASE}images/travelin-mockup.webp`, alt: "Travelin app mockup", tilt: 0, scale: 1, center: true },
-  { src: `${BASE}images/primaplus-mockup.webp`, alt: "PrimaPlus app mockup", tilt: 3, scale: 0.92 },
-  { src: `${BASE}images/fitmart-mockup.webp`, alt: "FitMart app mockup", tilt: 6, scale: 0.85 }
 ];
 
 const EXPERIENCE = [
@@ -212,19 +200,22 @@ const ORGANIZATIONS = [
     image: `${BASE}images/comnets-experience.webp`
   }
 ];
-const ORG_ACCENTS = [C.cyan, C.sun, C.hot, C.mint];
+const ORG_ACCENTS = [A.teal, A.amber, A.rose, A.aurora];
 
 const SKILLS_CATEGORIES = [
   {
     title: "UX Research & Design",
+    color: A.rose,
     skills: ["User Interviews", "Maze Usability Testing", "Design Thinking", "Information Architecture", "User Personas", "Wireframing", "High-Fidelity Prototyping", "Design Systems", "SUS Usability Analytics", "Print CSS (@media print)"]
   },
   {
     title: "AI-Native Workflow",
+    color: A.teal,
     skills: ["Antigravity AI", "Google Gemini API", "Teacher-in-the-Loop AI", "Claude API", "OpenAI GPT", "v0 by Vercel", "Cursor", "Google Stitch"]
   },
   {
     title: "Development Stack",
+    color: A.amber,
     skills: ["TypeScript", "React 19", "Next.js", "Vite", "Tailwind CSS v4", "CodeIgniter 3", "PHP", "Express.js", "Firebase Firestore", "SQL"]
   }
 ];
@@ -244,68 +235,95 @@ const PUBLICATIONS = [
   }
 ];
 
+const AWARDS = [
+  { t: "3rd Place National UI/UX Design", s: "SI FEST Sriwijaya University 2024" },
+  { t: "Web Code Design Finalist", s: "IFFEST Sriwijaya University 2024" },
+  { t: "EF SET C2 Proficient & IELTS 6.5", s: "Demonstrated native English proficiency" }
+];
+
 const STATS = [
-  { value: "07", label: "Case studies, each Maze-validated", color: C.cyan, icon: Layers },
-  { value: "3RD", label: "National UI/UX Design, SI FEST 2024", color: C.sun, icon: Award },
-  { value: "3.96", label: "GPA, Cum Laude — Universitas Sriwijaya", color: C.hot, icon: GraduationCap }
+  { key: "case-studies", value: "07", label: "Case studies, each Maze-validated", color: A.teal },
+  { key: "awards", value: "3RD", label: "National UI/UX Design, SI FEST 2024", color: A.amber },
+  { key: "gpa", value: "3.96", label: "GPA, Cum Laude — Universitas Sriwijaya", color: A.rose }
 ];
 
 const SOCIAL_LINKS = [
-  { icon: Linkedin, url: "http://www.linkedin.com/in/alikhsanfaiq/", label: "LinkedIn" },
-  { icon: Github, url: "https://github.com/faiqxz", label: "GitHub" },
-  { icon: Mail, url: "mailto:faiqsc@gmail.com", label: "Mail" },
-  { icon: Phone, url: "https://wa.me/6287899677415", label: "WhatsApp" }
+  { label: "linkedin", handle: "in/alikhsanfaiq", url: "http://www.linkedin.com/in/alikhsanfaiq/" },
+  { label: "github", handle: "faiqxz", url: "https://github.com/faiqxz" },
+  { label: "email", handle: "faiqsc@gmail.com", url: "mailto:faiqsc@gmail.com" },
+  { label: "whatsapp", handle: "chat on WhatsApp", url: "https://wa.me/6287899677415" }
 ];
 
 const NAV_LINKS = ["Work", "About", "Experience", "Contact"];
-// The small morphing traveler ends its trip by docking into the big rocket on the launch pad.
+// The ASCII traveler ends its trip by docking into the big rocket in the launch section.
 const JOURNEY_SECTIONS = ["top", "work", "about", "experience", "organizations", "launch"];
-
-// Hero exhaust puffs: [x %, y %, size % of the smoke box width, animation offset s]
-const SMOKE: [number, number, number, number][] = [
-  [50, 4, 20, 0], [44, 13, 26, 0.4], [57, 15, 25, 0.9],
-  [50, 25, 31, 0.6], [37, 31, 33, 0.2], [63, 33, 35, 1.1],
-  [50, 46, 42, 1.3], [29, 53, 39, 0.8], [71, 55, 41, 0.3],
-  [40, 72, 48, 0.1], [62, 75, 50, 0.7], [17, 80, 42, 0.5], [84, 82, 44, 1.0]
-];
 const RESUME_URL = "https://drive.google.com/drive/folders/19sAP-y6eZ6nVmynZCHuWvek-VLisyvfa";
 
+// A hand-set block-letter signature for the footer.
+const SIGNATURE = [
+  " _____  _    ___  ___  ",
+  "|  ___|/ \\  |_ _|/ _ \\ ",
+  "| |_  / _ \\  | || | | |",
+  "|  _|/ ___ \\ | || |_| |",
+  "|_| /_/   \\_\\___|\\__\\_\\"
+].join("\n");
+
 const reveal = {
-  initial: { opacity: 0, y: 30 },
+  initial: { opacity: 0, y: 24 },
   whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: "-80px" },
-  transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] as const }
+  viewport: { once: true, margin: "-60px" },
+  transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] as const }
 };
 
-/** Mono eyebrow label used above every section heading. */
-const Eyebrow = ({ children, color = C.cyan }: { children: React.ReactNode; color?: string }) => (
-  <span className="inline-flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-[0.22em]" style={{ color }}>
-    <span className="h-1.5 w-1.5 rounded-full" style={{ background: color }} />
-    {children}
-  </span>
-);
+const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
+const pad2 = (n: number) => String(n).padStart(2, "0");
+/** Short git-style hash for decoration (stable per string). */
+const shortHash = (s: string) => {
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) h = Math.imul(h ^ s.charCodeAt(i), 16777619);
+  return (h >>> 0).toString(16).padStart(8, "0").slice(0, 7);
+};
+const sceneCell = (w: number) => (w < 640 ? 6 : w < 1280 ? 7 : 8);
+
+/** `guest@faiq:~$ command` line that types itself when it scrolls into view. */
+function Prompt({ cmd, path = "~", className = "", start = true, keepCursor = false }: { cmd: string; path?: string; className?: string; start?: boolean; keepCursor?: boolean }) {
+  return (
+    <p className={`font-mono text-xs text-dim md:text-sm ${className}`}>
+      <span className="text-aurora">guest@faiq</span>
+      <span>:</span>
+      <span className="text-teal">{path}</span>
+      <span>$ </span>
+      <Typed text={cmd} className="text-bright" start={start} keepCursor={keepCursor} />
+    </p>
+  );
+}
+
+/** Section heading: a typed command, the real <h2> for search and screen readers, and halftone type. */
+function SectionHead({ cmd, title, lines, note, size = "clamp(2.6rem, 8.6vw, 7rem)", className = "" }: { cmd: string; title: string; lines: AsciiLine[]; note?: React.ReactNode; size?: string; className?: string }) {
+  return (
+    <div className={className}>
+      <Prompt cmd={cmd} />
+      <h2 className="sr-only">{title}</h2>
+      <AsciiText lines={lines} size={size} className="mt-5" />
+      {note && <p className="mt-6 max-w-xl text-sm leading-relaxed text-dim md:text-[15px]">{note}</p>}
+    </div>
+  );
+}
 
 export default function App() {
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [expandedExperience, setExpandedExperience] = useState<number | null>(null);
+  const [expandedExperience, setExpandedExperience] = useState<number | null>(0);
   const [emailInput, setEmailInput] = useState("");
-  const [subscribed, setSubscribed] = useState(false);
+  const [sent, setSent] = useState(false);
   const [showAllProjects, setShowAllProjects] = useState(false);
+  // Boot intro: plays once per session (decided by the inline script in index.html before first paint).
+  const [booting, setBooting] = useState(bootWillPlay);
+  const [ready, setReady] = useState(() => !bootWillPlay());
 
   const rootRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLElement>(null);
   const launchRef = useRef<HTMLElement>(null);
-  // Read the breakpoint synchronously so desktop doesn't render the mobile layout first and then jump.
-  // (Guarded so the page can also be prerendered to static HTML at build time, where there is no window.)
-  const [isDesktop, setIsDesktop] = useState(() => typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(min-width: 1024px)");
-    const onChange = () => setIsDesktop(mq.matches);
-    mq.addEventListener("change", onChange);
-    return () => mq.removeEventListener("change", onChange);
-  }, []);
 
   // Lock page scroll behind the mobile menu / case study panel, and let Escape close them.
   const overlayOpen = isMenuOpen || selectedProject !== null;
@@ -326,7 +344,7 @@ export default function App() {
     };
   }, [overlayOpen]);
 
-  // Close the mobile menu if the viewport grows past the hamburger breakpoint.
+  // Close the mobile menu if the viewport grows past the menu breakpoint.
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 768px)");
     const onChange = () => mq.matches && setIsMenuOpen(false);
@@ -334,79 +352,73 @@ export default function App() {
     return () => mq.removeEventListener("change", onChange);
   }, []);
 
-  // Hero: phone fan parallax + headline drift.
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"]
-  });
-  const yPhone1 = useTransform(scrollYProgress, [0, 1], [80, -120]);
-  const yPhone2 = useTransform(scrollYProgress, [0, 1], [40, -60]);
-  const yPhone3 = useTransform(scrollYProgress, [0, 1], [0, 10]);
-  const yPhone4 = useTransform(scrollYProgress, [0, 1], [40, -60]);
-  const yPhone5 = useTransform(scrollYProgress, [0, 1], [80, -120]);
-  const phoneY = [yPhone1, yPhone2, yPhone3, yPhone4, yPhone5];
-  const headlineY = useTransform(scrollYProgress, [0, 1], [0, 140]);
+  // Scroll progress for the two rocket scenes (read by the canvases at their own frame rate).
+  const heroProgress = useCallback(() => {
+    const el = heroRef.current;
+    if (!el) return 0;
+    return clamp01(window.scrollY / Math.max(1, el.offsetHeight * 0.85));
+  }, []);
+  const launchProgress = useCallback(() => {
+    const el = launchRef.current;
+    if (!el) return 0;
+    const r = el.getBoundingClientRect();
+    const vh = window.innerHeight;
+    return clamp01((vh * 0.85 - r.top) / Math.max(1, r.height * 0.95));
+  }, []);
 
-  // Launch pad: the rocket keeps climbing and the two words part as you scroll on into contact.
-  const { scrollYProgress: launchProgress } = useScroll({
-    target: launchRef,
-    offset: ["start end", "end start"]
-  });
-  const rocketY = useTransform(launchProgress, [0.35, 1], [0, -360]);
-  const wordLeftX = useTransform(launchProgress, [0.35, 1], [0, -180]);
-  const wordRightX = useTransform(launchProgress, [0.35, 1], [0, 180]);
-
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleConnect = (e: React.FormEvent) => {
     e.preventDefault();
-    if (emailInput.trim()) {
-      setSubscribed(true);
-      setTimeout(() => {
-        setSubscribed(false);
-        setEmailInput("");
-      }, 4000);
-    }
+    const email = emailInput.trim();
+    if (!email) return;
+    // Opens the visitor's mail app with a short note, so the request actually reaches Faiq.
+    const body = `Hi Faiq,\n\nI'd like to talk about a project. You can reach me at ${email}.\n`;
+    window.location.href = `mailto:faiqsc@gmail.com?subject=${encodeURIComponent("Let's talk")}&body=${encodeURIComponent(body)}`;
+    setSent(true);
   };
 
   const visibleProjects = showAllProjects ? PROJECTS : PROJECTS.slice(0, 3);
 
   return (
     <MotionConfig reducedMotion="user">
-      <div ref={rootRef} className="relative min-h-screen overflow-x-clip bg-ink text-cream">
-        <div className="noise-overlay" />
+      {booting && <BootSequence onReveal={() => setReady(true)} onDone={() => setBooting(false)} />}
 
-        {/* Morphing rocket that flies through every section */}
-        <RocketJourney rootRef={rootRef} sectionIds={JOURNEY_SECTIONS} />
+      <div ref={rootRef} className="relative min-h-screen overflow-x-clip bg-ground text-fg">
+        <div className="scanlines" aria-hidden="true" />
+
+        {/* ASCII traveler that flies through every section */}
+        <AsciiJourney rootRef={rootRef} sectionIds={JOURNEY_SECTIONS} />
 
         {/* ───────────────── Nav ───────────────── */}
-        <nav className="fixed left-1/2 top-4 z-40 flex h-14 w-[calc(100%-2rem)] max-w-5xl -translate-x-1/2 items-center justify-between rounded-full border border-white/10 bg-ink/75 pl-5 pr-2 shadow-[0_10px_40px_rgba(0,0,0,0.35)] backdrop-blur-xl md:top-6 md:h-16 md:w-[90%] md:pl-7">
-          <a href="#top" className="font-display text-2xl tracking-wide md:text-[1.7rem]">
-            FAIQ<span className="text-hot">.</span>
-          </a>
+        <nav className="fixed inset-x-0 top-0 z-40 border-b border-line bg-ground/85 backdrop-blur-md">
+          <div className="mx-auto flex h-12 max-w-7xl items-center justify-between gap-4 px-4 md:h-14 md:px-8">
+            <a href="#top" aria-label="Al Ikhsan Faiq, back to top" className="whitespace-nowrap text-[13px] md:text-sm">
+              <span className="text-aurora">faiq</span>
+              <span className="text-dim">@</span>
+              <span className="text-bright">portfolio</span>
+              <span className="text-dim">:</span>
+              <span className="text-teal">~</span>
+              <span className="text-dim">$</span>
+              <span className="cursor-block text-aurora" aria-hidden="true" />
+            </a>
 
-          <div className="hidden items-center gap-8 text-xs font-bold uppercase tracking-[0.18em] text-cream/60 md:flex">
-            {NAV_LINKS.slice(0, 3).map(item => (
-              <a key={item} href={`#${item.toLowerCase()}`} className="transition-colors hover:text-cream">
-                {item}
-              </a>
-            ))}
-          </div>
-
-          <a href="#contact" className="btn btn-hot hidden !py-3 md:inline-flex">
-            Let's talk <ArrowUpRight className="h-3.5 w-3.5" />
-          </a>
-
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-            aria-expanded={isMenuOpen}
-            className="relative flex h-10 w-10 items-center justify-center rounded-full bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan md:hidden"
-          >
-            <div className="flex h-4 w-5 flex-col items-center justify-between">
-              <span className={`h-[2px] w-5 rounded-full bg-cream transition-transform duration-300 ${isMenuOpen ? "translate-y-[7px] rotate-45" : ""}`} />
-              <span className={`h-[2px] w-5 rounded-full bg-cream transition-opacity duration-300 ${isMenuOpen ? "opacity-0" : ""}`} />
-              <span className={`h-[2px] w-5 rounded-full bg-cream transition-transform duration-300 ${isMenuOpen ? "-translate-y-[7px] -rotate-45" : ""}`} />
+            <div className="hidden items-center gap-1 text-[13px] md:flex">
+              {NAV_LINKS.slice(0, 3).map(item => (
+                <a key={item} href={`#${item.toLowerCase()}`} className="px-2 py-1 text-dim transition-colors hover:text-aurora">
+                  <span aria-hidden="true">[</span>
+                  {item.toLowerCase()}
+                  <span aria-hidden="true">]</span>
+                </a>
+              ))}
             </div>
-          </button>
+
+            <a href="#contact" className="btn btn-primary btn-sm hidden md:inline-flex">
+              let's talk
+            </a>
+
+            <button onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label={isMenuOpen ? "Close menu" : "Open menu"} aria-expanded={isMenuOpen} className="btn btn-sm md:hidden">
+              {isMenuOpen ? "close" : "menu"}
+            </button>
+          </div>
         </nav>
 
         {/* Fullscreen mobile menu */}
@@ -416,32 +428,27 @@ export default function App() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-30 flex flex-col justify-center overflow-hidden bg-ink/[0.98] px-8 md:hidden"
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-30 flex flex-col bg-ground px-5 pb-[max(2rem,env(safe-area-inset-bottom))] pt-20 md:hidden"
             >
-              <div className="starfield absolute inset-0 opacity-50" aria-hidden="true" />
-              <Floaty className="right-10 top-28"><Ring color={C.hot} size={40} /></Floaty>
-              <Floaty className="bottom-40 right-16" duration={9}><Zigzag color={C.sun} size={56} /></Floaty>
-              <div className="relative flex flex-col gap-3 text-left">
+              <Prompt cmd="ls ~/" />
+              <ul className="mt-8 space-y-1">
                 {NAV_LINKS.map((item, idx) => (
-                  <motion.a
-                    key={item}
-                    href={`#${item.toLowerCase()}`}
-                    onClick={() => setIsMenuOpen(false)}
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.06 * idx, duration: 0.45 }}
-                    className={`font-display text-7xl uppercase leading-none ${idx % 2 ? "text-outline" : ""}`}
-                  >
-                    {item}
-                  </motion.a>
+                  <motion.li key={item} initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.05 * idx + 0.1, duration: 0.3 }}>
+                    <a href={`#${item.toLowerCase()}`} onClick={() => setIsMenuOpen(false)} className="flex items-baseline gap-4 py-2 text-4xl font-extrabold text-bright">
+                      <span className="text-xs font-normal text-dim">{pad2(idx + 1)}</span>
+                      {item.toLowerCase()}
+                      <span className="text-aurora">/</span>
+                    </a>
+                  </motion.li>
                 ))}
-              </div>
-              <div className="absolute bottom-[max(3rem,env(safe-area-inset-bottom))] left-8 space-y-4">
-                <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-cream/40">Let's Connect</span>
-                <div className="flex gap-6">
+              </ul>
+              <div className="mt-auto space-y-3 text-sm">
+                <p className="text-xs text-dim"># let's connect</p>
+                <div className="flex flex-wrap gap-x-5 gap-y-2">
                   {SOCIAL_LINKS.map(soc => (
-                    <a key={soc.label} href={soc.url} target="_blank" rel="noopener noreferrer" aria-label={soc.label} className="-m-2 p-2 text-cream/60 hover:text-cream">
-                      <soc.icon className="h-5 w-5" />
+                    <a key={soc.label} href={soc.url} target="_blank" rel="noopener noreferrer" className="tlink text-fg">
+                      {soc.label}
                     </a>
                   ))}
                 </div>
@@ -451,484 +458,325 @@ export default function App() {
         </AnimatePresence>
 
         {/* ───────────────── Hero ───────────────── */}
-        <section
-          id="top"
-          ref={heroRef}
-          className="relative z-10 overflow-hidden bg-[radial-gradient(120%_75%_at_50%_0%,#3123B5_0%,#1A1360_40%,#120D45_72%,#0F0B3A_100%)] pt-28 md:pt-36"
-        >
-          <div className="starfield pointer-events-none absolute inset-0 opacity-80" aria-hidden="true" />
+        <section id="top" ref={heroRef} className="relative z-10 min-h-[100svh] overflow-hidden bg-ground">
+          <AsciiCanvas scene={auroraLaunch} images={{ rocket: ROCKET_IMG }} getProgress={heroProgress} cell={sceneCell} className="absolute inset-0" />
+          {/* Keep the copy readable over the aurora */}
+          <div
+            className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(5,8,15,0.8)_0%,rgba(5,8,15,0.62)_50%,rgba(5,8,15,0.15)_76%,rgba(5,8,15,0)_100%)] lg:bg-[linear-gradient(90deg,rgba(5,8,15,0.82)_0%,rgba(5,8,15,0.55)_40%,rgba(5,8,15,0)_66%)]"
+            aria-hidden="true"
+          />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-ground" aria-hidden="true" />
 
-          {/* Doodles */}
-          <Floaty className="left-[5%] top-[18%]" duration={7}><Squiggle color={C.cyan} size={76} /></Floaty>
-          <Floaty className="right-[7%] top-[14%]" duration={8} delay={1}><Ring color={C.hot} size={52} /></Floaty>
-          <Floaty className="left-[12%] top-[46%] hidden sm:block" duration={9} delay={0.5} rotate={-12}><Zigzag color={C.sun} size={66} /></Floaty>
-          <Floaty className="right-[14%] top-[40%] hidden sm:block" duration={6.5} delay={1.6} rotate={18}><Square color={C.electric} size={42} /></Floaty>
-          <Floaty className="left-[3%] top-[62%] hidden lg:block" duration={8.5} delay={2}><Plus color={C.hot} size={30} /></Floaty>
-          <Floaty className="right-[4%] top-[60%] hidden lg:block" duration={7.5} delay={0.8}><Arc color={C.cyan} size={54} /></Floaty>
-          <Floaty className="left-[30%] top-[10%] hidden md:block" duration={6} delay={1.2}><Dot color={C.sun} size={12} /></Floaty>
-          <Floaty className="right-[30%] top-[30%] hidden md:block" duration={7} delay={0.3}><Dot color={C.cyan} size={9} /></Floaty>
+          <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-7xl flex-col justify-start px-5 pb-28 pt-20 md:px-10 lg:justify-center lg:pt-24">
+            <Prompt cmd="whoami" path="~" start={ready} keepCursor={false} />
 
-          <div className="relative z-10 mx-auto max-w-[1440px] px-4 text-center">
             {/* The page's h1 is the name + role (what people and search engines look for); the big line below is a tagline. */}
-            <motion.h1
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="font-mono text-[11px] font-bold uppercase leading-relaxed tracking-[0.24em] text-cream/70"
-            >
+            <h1 className="mt-3 text-[11px] font-medium uppercase leading-relaxed tracking-[0.2em] text-bright md:text-[13px]">
               <span className="block sm:inline">Al Ikhsan Faiq</span>
-              <span className="hidden text-hot sm:inline"> / </span>
+              <span className="hidden text-dim sm:inline"> / </span>
               <span className="block sm:inline">Design Engineer</span>
-              <span className="hidden text-hot sm:inline"> · </span>
+              <span className="hidden text-dim sm:inline"> · </span>
               <span className="block sm:inline">
-                UI/UX <span className="text-hot">·</span> Frontend <span className="text-hot">·</span> AI
+                UI/UX <span className="text-aurora">·</span> Frontend <span className="text-aurora">·</span> AI
               </span>
-            </motion.h1>
+            </h1>
 
-            <motion.p
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
-              style={{ y: isDesktop ? headlineY : 0 }}
-              className="mt-5 font-display text-[clamp(3.6rem,15vw,13rem)] uppercase leading-[0.86]"
-            >
-              <span className="block">Design that</span>
-              <span className="block">
-                <span className="text-hot">takes</span> <span className="text-outline">off.</span>
-              </span>
-            </motion.p>
-          </div>
+            <p className="sr-only">Design that takes off.</p>
+            <div className="mt-6 w-full max-w-[60rem]">
+              <AsciiText
+                lines={[
+                  { text: "Design that", colors: G_WHITE },
+                  { text: "takes off.", colors: G_AURORA }
+                ]}
+                size="clamp(3.3rem, 11.2vw, 9.25rem)"
+                cellRatio={20}
+                play={ready}
+              />
+            </div>
 
-          {/* 5-phone fan, overlapping the headline like a sticker punched through the type */}
-          <div className="relative z-20 -mt-[8vw] flex w-full justify-center md:-mt-[6vw]">
-            <div className="pointer-events-none absolute -top-10 h-[420px] w-[900px] max-w-[160%] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(108,92,255,0.45)_0%,transparent_68%)]" aria-hidden="true" />
-            <div className="relative z-20 flex w-full max-w-full snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain px-[calc(50%-110px)] pb-6 [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-6 sm:px-[calc(50%-125px)] md:px-[calc(50%-135px)] lg:items-end lg:justify-center lg:gap-4 lg:overflow-visible lg:px-0 lg:pb-0 xl:gap-8 [&::-webkit-scrollbar]:hidden">
-              {HERO_PHONES.map((phone, i) => (
-                <motion.div
-                  key={phone.src}
-                  initial={{ opacity: 0, y: 60 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.35 + i * 0.06, ease: [0.16, 1, 0.3, 1] }}
-                  className="shrink-0 snap-center"
-                >
-                  <motion.div
-                    style={isDesktop ? { y: phoneY[i], rotate: phone.tilt, scale: phone.scale } : { y: 0, rotate: 0, scale: 1 }}
-                    className={`w-[220px] origin-bottom sm:w-[250px] md:w-[270px] lg:will-change-transform ${
-                      phone.center ? "z-30 lg:w-[clamp(160px,16.5vw,245px)]" : "lg:w-[clamp(155px,16vw,240px)]"
-                    }`}
-                  >
-                    <img
-                      src={phone.src}
-                      alt={phone.alt}
-                      width={600}
-                      height={1180}
-                      decoding="async"
-                      fetchPriority={phone.center ? "high" : "auto"}
-                      className="h-auto w-full object-contain"
-                    />
-                  </motion.div>
-                </motion.div>
-              ))}
+            <div className="mt-6 max-w-xl">
+              <p className="text-base font-bold leading-snug text-bright md:text-xl">
+                Human-centered UI/UX, <span className="text-aurora">AI-native</span> design engineering.
+              </p>
+              <p className="mt-3 text-sm leading-relaxed text-fg/85 md:text-[15px]">
+                Hi, I'm <span className="text-bright">Al Ikhsan Faiq</span>, but call me Faiq. I design and build: user research and prototypes in Figma, production frontends in
+                React and TypeScript, and AI features built in from day one. Information Systems graduate, GPA 3.96 Cum Laude.
+              </p>
+              <div className="mt-7 flex flex-wrap gap-3">
+                <a href="#work" className="btn btn-primary">
+                  see my work ↓
+                </a>
+                <a href={RESUME_URL} target="_blank" rel="noopener noreferrer" className="btn">
+                  resume ↗
+                </a>
+              </div>
             </div>
           </div>
 
-          {/* Intro + connect */}
-          <div className="relative z-30 mx-auto grid max-w-6xl items-end gap-10 px-5 pb-[calc(max(170px,16vw)+2.5rem)] pt-12 md:grid-cols-[1.25fr_1fr] md:gap-16 md:px-10 md:pt-16">
-            <motion.div {...reveal} className="text-left">
-              <p className="text-3xl font-semibold leading-[1.15] tracking-tight md:text-4xl">
-                Human-centered UI/UX,
-                <br />
-                <span className="text-cyan">AI-native</span> design engineering.
-              </p>
-              <p className="mt-5 max-w-lg text-base font-light leading-relaxed text-cream/65 md:text-lg">
-                Hi, I'm <span className="font-semibold text-cream">Al Ikhsan Faiq</span>, but call me Faiq. I design and build: user research and
-                prototypes in Figma, production frontends in React and TypeScript, and AI features built in from day one. Information Systems
-                graduate, GPA 3.96 Cum Laude.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <a href="#work" className="btn btn-hot">
-                  See my work <ArrowDown className="h-3.5 w-3.5" />
-                </a>
-                <a href={RESUME_URL} target="_blank" rel="noopener noreferrer" className="btn btn-ghost">
-                  <Download className="h-3.5 w-3.5" /> Resume
-                </a>
-              </div>
-            </motion.div>
-
-            <motion.form
-              {...reveal}
-              onSubmit={handleSubscribe}
-              className="relative rounded-[1.75rem] border border-white/10 bg-white/[0.05] p-5 text-left md:p-6"
-            >
-              <Burst color={C.sun} size={74} className="absolute -right-4 -top-8 rotate-12">
-                <Rocket className="h-6 w-6 text-ink" />
-              </Burst>
-              <Eyebrow color={C.sun}>Let's connect</Eyebrow>
-              <p className="mt-3 text-sm leading-relaxed text-cream/60">Leave your email to start a conversation about your next product.</p>
-              <div className="mt-5 flex items-center gap-2 rounded-full border border-white/10 bg-ink/60 p-1.5 focus-within:border-cyan/60">
-                <input
-                  type="email"
-                  placeholder="your.email@domain.com"
-                  value={emailInput}
-                  onChange={e => setEmailInput(e.target.value)}
-                  required
-                  aria-label="Your email address"
-                  className="w-full min-w-0 bg-transparent py-2 pl-4 text-base text-cream placeholder-cream/30 outline-none sm:text-sm"
-                />
-                <button type="submit" className="btn btn-hot shrink-0 !px-5 !py-3">
-                  {subscribed ? (
-                    <>
-                      Connected <Sparkles className="h-3.5 w-3.5" />
-                    </>
-                  ) : (
-                    <>
-                      Connect <Send className="h-3.5 w-3.5" />
-                    </>
-                  )}
-                </button>
-              </div>
-            </motion.form>
+          {/* Editor-style status bar */}
+          <div className="absolute inset-x-0 bottom-0 z-10 border-t border-line bg-ground/80 text-[10px] backdrop-blur-sm md:text-xs" aria-hidden="true">
+            <div className="mx-auto flex h-7 max-w-7xl items-center gap-3 pr-4 md:pr-8">
+              <span className="mode-chip">NORMAL</span>
+              <span className="truncate text-dim">~/portfolio/index.tsx</span>
+              <span className="ml-auto hidden text-dim sm:inline">utf-8 · palembang, id</span>
+              <span className="text-aurora">scroll ↓ to launch</span>
+            </div>
           </div>
-
-          {/* Soft dark cloud bank: indigo bubbles that melt into the dark work section */}
-          <CloudBank
-            front={C.ink}
-            tones={[["#B3A9FF", 0.12], ["#4A3DC4", 0.32], ["#21177A", 0.7]]}
-            className="pointer-events-none absolute bottom-[-2px] left-0 z-20 h-[max(170px,16vw)] w-full"
-          />
         </section>
 
         {/* ───────────────── Selected Work ───────────────── */}
-        {/* overflow-x-clip (not overflow-hidden) so the sticky DotGrid actually stays pinned while scrolling */}
-        <div id="work" className="relative z-10 w-full overflow-x-clip bg-ink">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: false, amount: 0.04 }}
-            transition={{ duration: 1.2, ease: "easeOut" }}
-            className="pointer-events-none"
+        {/* overflow-x-clip (not overflow-hidden) so the sticky field stays pinned while scrolling */}
+        <div id="work" className="relative z-10 w-full overflow-x-clip bg-ground">
+          <div
+            className="pointer-events-none sticky top-0 z-0 -mb-[100vh] h-[100vh]"
             style={{
-              position: "sticky",
-              top: 0,
-              height: "100vh",
-              zIndex: 0,
-              marginBottom: "-100vh",
-              maskImage: "linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%)",
-              WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 12%, black 88%, transparent 100%)"
+              maskImage: "linear-gradient(to bottom, transparent 0%, black 14%, black 86%, transparent 100%)",
+              WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 14%, black 86%, transparent 100%)"
             }}
           >
-            <DotGrid dotSize={3} gap={30} baseColor="#24214A" activeColor="#FF3D81" proximity={130} shockRadius={220} shockStrength={5} returnDuration={1.5} />
-          </motion.div>
+            <AsciiCanvas scene={field} interactive cell={12} fps={12} className="h-full w-full opacity-70" />
+          </div>
 
-          <section className="relative z-10 pb-24 pt-10 md:pb-36 md:pt-16">
-            <h2 className="sr-only">Selected Work</h2>
-            <div className="relative">
-              <OutlineStack
-                rows={[
-                  [{ t: "Selected" }, { t: "Work" }, { t: "Selected", fill: C.cyan }],
-                  [{ t: "Work" }, { t: "Selected", fill: C.cream }, { t: "Work" }],
-                  [{ t: "Selected", fill: C.hot }, { t: "Work" }, { t: "Selected" }]
-                ]}
-              />
-              <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-                <SpinBadge text="MAZE-VALIDATED • USER-TESTED • " size={isDesktop ? 150 : 104} bg={C.sun}>
-                  <Sparkles className="h-7 w-7 md:h-9 md:w-9" />
-                </SpinBadge>
-              </div>
-            </div>
+          <section className="relative z-10 mx-auto max-w-7xl px-5 pb-24 pt-20 md:px-10 md:pb-36 md:pt-28">
+            <SectionHead
+              cmd="ls -la ~/projects"
+              title="Selected Work"
+              lines={[{ text: "Selected work", colors: G_TEAL }]}
+              note={
+                <>
+                  Each project undergoes thorough user testing and quantitative validation (Maze) to ensure <span className="text-bright">absolute design usability.</span>
+                </>
+              }
+            />
 
-            <div className="mx-auto max-w-6xl px-5 md:px-10 lg:px-16">
-              <motion.p {...reveal} className="mx-auto mt-12 max-w-3xl text-center text-xl font-light leading-snug text-cream/80 md:mt-16 md:text-3xl">
-                Each project undergoes thorough user testing and quantitative validation (Maze) to ensure{" "}
-                <span className="font-semibold text-cream">absolute design usability.</span>
-              </motion.p>
-
-              {/* Stats row */}
-              <motion.div {...reveal} className="mt-12 grid gap-6 sm:grid-cols-3 md:mt-16">
-                {STATS.map(s => (
-                  <div key={s.value} className="flex items-start gap-4 border-t border-white/15 pt-5">
-                    <s.icon className="mt-1 h-6 w-6 shrink-0" style={{ color: s.color }} strokeWidth={1.75} />
-                    <div>
-                      <div className="font-display text-4xl leading-none md:text-5xl" style={{ color: s.color }}>
-                        {s.value}
-                      </div>
-                      <p className="mt-2 text-xs leading-relaxed text-cream/55">{s.label}</p>
-                    </div>
+            {/* Stats */}
+            <motion.div {...reveal} className="mt-12 grid grid-cols-1 gap-4 sm:grid-cols-3 md:mt-16 md:gap-6">
+              {STATS.map(s => (
+                <React.Fragment key={s.key}>
+                <Frame title={s.key} titleColor={s.color} className="bg-ground/70 text-xs md:text-sm">
+                  <div className="text-4xl font-extrabold leading-none md:text-5xl" style={{ color: s.color }}>
+                    {s.value}
                   </div>
-                ))}
-              </motion.div>
+                  <p className="mt-3 text-xs leading-relaxed text-dim">{s.label}</p>
+                </Frame>
+                </React.Fragment>
+              ))}
+            </motion.div>
 
-              {/* Projects */}
-              <div className="mt-24 space-y-24 md:mt-32 md:space-y-32 lg:space-y-40">
-                {visibleProjects.map((project, index) => {
-                  const isEven = index % 2 === 0;
-                  const isLaptop = project.title === "Clairo";
-                  return (
-                    <div key={project.title} className="grid items-center gap-10 text-left lg:grid-cols-12 lg:gap-16">
-                      <motion.div {...reveal} className={`space-y-5 lg:col-span-6 ${!isEven ? "lg:order-2" : ""}`}>
-                        <div className="flex items-end gap-4">
-                          <span className="text-outline font-display text-7xl leading-[0.8] md:text-8xl" style={{ ["--stroke-color" as string]: project.accent }}>
-                            0{index + 1}
-                          </span>
-                          <span className="pb-1 font-mono text-[11px] font-bold uppercase tracking-[0.18em]" style={{ color: project.accent }}>
-                            {project.category}
-                          </span>
+            {/* Projects */}
+            <div className="mt-16 space-y-10 md:mt-24 md:space-y-14">
+              {visibleProjects.map((project, index) => {
+                const flip = index % 2 === 1;
+                const isLaptop = project.title === "Clairo";
+                return (
+                  <motion.div key={project.title} {...reveal}>
+                    <Frame
+                      as="article"
+                      title={`~/projects/${project.slug}`}
+                      titleColor={project.accent}
+                      meta={`${pad2(index + 1)}/${pad2(PROJECTS.length)}`}
+                      className="ascii-hover bg-ground/80 text-xs md:text-sm"
+                      bodyClassName="!py-8 md:!py-12"
+                    >
+                      <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-14">
+                        <div className={`space-y-5 lg:col-span-6 ${flip ? "lg:order-2" : ""}`}>
+                          <p className="text-[11px] uppercase tracking-[0.18em] md:text-xs" style={{ color: project.accent }}>
+                            {pad2(index + 1)} · {project.category}
+                          </p>
+                          <h3 className="text-4xl font-extrabold uppercase leading-none tracking-tight text-bright md:text-6xl">{project.title}</h3>
+                          <p className="text-sm leading-relaxed text-fg/80 md:text-[15px]">{project.description}</p>
+                          <ul className="flex flex-wrap gap-x-4 gap-y-1.5 text-xs text-dim">
+                            {project.tags.map(tag => (
+                              <li key={tag}>
+                                <span style={{ color: project.accent }}>#</span>
+                                {tag}
+                              </li>
+                            ))}
+                          </ul>
+                          <div className="flex flex-wrap gap-3 pt-1">
+                            <button onClick={() => setSelectedProject(project.title)} className="btn btn-primary">
+                              read case study →
+                            </button>
+                            <a href={project.link} target="_blank" rel="noopener noreferrer" className="btn">
+                              slides ↗
+                            </a>
+                          </div>
                         </div>
 
-                        <h3 className="font-display text-6xl uppercase leading-[0.9] md:text-7xl">{project.title}</h3>
-                        <p className="text-sm font-light leading-relaxed text-cream/65 md:text-base">{project.description}</p>
-
-                        <div className="flex flex-wrap gap-2">
-                          {project.tags.map(tag => (
-                            <span key={tag} className="rounded-full border border-white/15 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-cream/70">
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-
-                        <div className="flex flex-wrap gap-3 pt-2">
-                          <button onClick={() => setSelectedProject(project.title)} className="btn btn-hot group">
-                            Read case study
-                            <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-                          </button>
-                          <a href={project.link} target="_blank" rel="noopener noreferrer" className="btn btn-ghost">
-                            Slides ↗
-                          </a>
-                        </div>
-                      </motion.div>
-
-                      <motion.div {...reveal} className={`relative flex justify-center lg:col-span-6 ${!isEven ? "lg:order-1" : ""}`}>
-                        <div
-                          className="pointer-events-none absolute left-1/2 top-1/2 aspect-square w-[115%] max-w-[560px] -translate-x-1/2 -translate-y-1/2 rounded-full"
-                          style={{ background: `radial-gradient(closest-side, ${project.accent}55, ${project.accent}14 60%, transparent)` }}
-                          aria-hidden="true"
-                        />
-                        <Floaty className={`hidden md:block ${isEven ? "right-[8%] top-[6%]" : "left-[8%] top-[10%]"}`} duration={7 + index}>
-                          {index % 3 === 0 ? <Ring color={project.accent} size={40} /> : index % 3 === 1 ? <Zigzag color={project.accent} size={54} /> : <Plus color={project.accent} size={30} />}
-                        </Floaty>
-                        <motion.div
-                          whileHover={{ scale: 1.03, y: -8, rotate: isEven ? 1.5 : -1.5 }}
-                          transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                          className={`relative w-full ${isLaptop ? "max-w-[580px]" : "max-w-[250px] sm:max-w-[300px]"} select-none`}
-                        >
-                          <img
+                        <div className={`flex justify-center lg:col-span-6 ${flip ? "lg:order-1" : ""}`}>
+                          <AsciiImage
                             src={project.image}
                             alt={`${project.title} mockup`}
                             width={project.imageSize[0]}
                             height={project.imageSize[1]}
-                            loading="lazy"
-                            decoding="async"
-                            className="h-auto w-full object-contain"
+                            cell={isLaptop ? 5 : 4}
+                            className={isLaptop ? "w-full max-w-[580px]" : "w-full max-w-[220px] sm:max-w-[260px]"}
                           />
-                        </motion.div>
-                      </motion.div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {PROJECTS.length > 3 && (
-                <motion.div {...reveal} className="flex justify-center pt-16 md:pt-24">
-                  <button onClick={() => setShowAllProjects(!showAllProjects)} className="btn btn-ghost !px-7 !py-4">
-                    <span>{showAllProjects ? "Show fewer projects" : `View ${PROJECTS.length - 3} more projects`}</span>
-                    <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${showAllProjects ? "rotate-180" : ""}`} />
-                  </button>
-                </motion.div>
-              )}
+                        </div>
+                      </div>
+                    </Frame>
+                  </motion.div>
+                );
+              })}
             </div>
+
+            {PROJECTS.length > 3 && (
+              <div className="flex justify-center pt-12 md:pt-16">
+                <button onClick={() => setShowAllProjects(!showAllProjects)} className="btn" aria-expanded={showAllProjects}>
+                  {showAllProjects ? "show fewer projects" : `ls --all  (+${PROJECTS.length - 3} more projects)`}
+                </button>
+              </div>
+            )}
           </section>
         </div>
 
-        {/* ───────────────── About (bento) ───────────────── */}
-        <section
-          id="about"
-          className="relative z-10 px-5 py-28 md:px-10 md:py-40 lg:px-16 xl:px-24"
-          style={{ background: `linear-gradient(to bottom, ${C.ink} 0px, ${C.night} 260px, ${C.night} calc(100% - 260px), ${C.ink} 100%)` }}
-        >
-          <div className="starfield pointer-events-none absolute inset-0 opacity-40" aria-hidden="true" />
-          <Floaty className="right-[6%] top-16 hidden md:block" duration={8}><Squiggle color={C.sun} size={70} /></Floaty>
+        {/* ───────────────── About ───────────────── */}
+        <section id="about" className="relative z-10 bg-ground px-5 py-24 md:px-10 md:py-36">
+          <div className="mx-auto max-w-7xl">
+            <SectionHead
+              cmd="cat about.md"
+              title="Academic & Professional core"
+              lines={[
+                { text: "Academic &", colors: G_WHITE },
+                { text: "Professional core.", colors: G_WARM }
+              ]}
+              note="Fusing traditional Information Systems architecture with modern AI-native digital design methodologies."
+            />
 
-          <div className="relative mx-auto max-w-7xl space-y-12 md:space-y-16">
-            <motion.div {...reveal} className="max-w-3xl space-y-5 text-left">
-              <Eyebrow color={C.sun}>Background &amp; Details</Eyebrow>
-              <h2 className="font-display text-[clamp(3rem,9vw,7rem)] uppercase leading-[0.88]">
-                <span className="text-outline">Academic &amp;</span>
-                <br />
-                Professional <span className="text-sun">core.</span>
-              </h2>
-              <p className="max-w-xl text-sm font-light text-cream/60 md:text-base">
-                Fusing traditional Information Systems architecture with modern AI-native digital design methodologies.
-              </p>
-            </motion.div>
+            <div className="mt-12 grid grid-cols-1 gap-5 text-xs md:mt-16 md:gap-6 md:text-sm lg:grid-cols-12">
+              <motion.div {...reveal} className="lg:col-span-4">
+                <Frame title="faiq.jpg" titleColor={A.aurora} meta="800×800" className="ascii-hover h-full">
+                  <AsciiImage src={`${BASE}images/al-ikhsan-faiq.jpg`} alt="Portrait of Al Ikhsan Faiq" width={800} height={800} fit="cover" cell={5} className="w-full" />
+                  <p className="mt-4 text-xs text-dim">
+                    <span className="text-bright">Al Ikhsan Faiq</span> · Palembang, South Sumatra, Indonesia
+                  </p>
+                </Frame>
+              </motion.div>
 
-            <MagicBento glowColor="61, 227, 242">
-              <motion.div {...reveal} className="md:col-span-6 lg:col-span-7">
-                <MagicBentoCard glowColor="61, 227, 242" particleCount={6} className="flex h-full min-h-[260px] flex-col justify-between gap-8 rounded-[2rem] border border-white/10 bg-[#1D1860] p-6 text-left md:min-h-[300px] md:p-8">
-                  <div className="flex items-start justify-between">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-mint/15 text-mint">
-                      <GraduationCap className="h-6 w-6" strokeWidth={1.75} />
-                    </div>
-                    <span className="rounded-full border border-mint/25 bg-mint/10 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-widest text-mint">
-                      GPA 3.96 / 4.00
-                    </span>
-                  </div>
-                  <div className="space-y-2">
-                    <span className="block text-[10px] font-bold uppercase tracking-wider text-cream/45">Education</span>
-                    <h3 className="font-display text-4xl uppercase leading-none">Universitas Sriwijaya</h3>
-                    <p className="text-sm font-light leading-relaxed text-cream/60">
+              <motion.div {...reveal} className="lg:col-span-8">
+                <Frame title="education" titleColor={A.aurora} meta="GPA 3.96 / 4.00" className="h-full" bodyClassName="flex h-full flex-col justify-between gap-8">
+                  <div>
+                    <h3 className="text-2xl font-extrabold uppercase leading-tight text-bright md:text-4xl">Universitas Sriwijaya</h3>
+                    <p className="mt-3 max-w-2xl text-sm leading-relaxed text-fg/80">
                       S1 Information Systems (Cum Laude). Graduated in 3.5 years. Deep studies in Human-Computer Interaction (HCI), Software Engineering, and Database Systems.
                     </p>
                   </div>
-                </MagicBentoCard>
+                  <div className="text-xs md:text-sm">
+                    <p className="text-dim">gpa</p>
+                    <p className="mt-1 whitespace-nowrap" aria-label="GPA 3.96 out of 4.00">
+                      <span className="text-dim">[</span>
+                      <span className="text-aurora">{"█".repeat(24)}</span>
+                      <span className="text-line2">░</span>
+                      <span className="text-dim">]</span> <span className="text-bright">3.96</span>
+                      <span className="text-dim"> / 4.00</span>
+                    </p>
+                  </div>
+                </Frame>
               </motion.div>
 
-              <motion.div {...reveal} className="md:col-span-6 lg:col-span-5">
-                <MagicBentoCard glowColor="61, 227, 242" particleCount={6} className="flex h-full min-h-[260px] flex-col justify-between gap-8 rounded-[2rem] border border-white/10 bg-[#1D1860] p-6 text-left md:min-h-[300px] md:p-8">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-cyan/15 text-cyan">
-                    <BookOpen className="h-6 w-6" strokeWidth={1.75} />
-                  </div>
-                  <div className="space-y-4">
-                    <span className="block text-[10px] font-bold uppercase tracking-wider text-cream/45">Scientific Publications</span>
-                    <div className="space-y-4">
-                      {PUBLICATIONS.map(pub => (
-                        <a key={pub.title} href={pub.link} target="_blank" rel="noopener noreferrer" className="group block">
-                          <h4 className="line-clamp-2 text-sm font-bold leading-snug transition-colors group-hover:text-cyan">{pub.title} ↗</h4>
-                          <span className="mt-1 block text-[10px] text-cream/45">
+              <motion.div {...reveal} className="lg:col-span-6">
+                <Frame title="publications" titleColor={A.teal} meta={`${PUBLICATIONS.length} papers`} className="h-full">
+                  <ul className="space-y-5">
+                    {PUBLICATIONS.map(pub => (
+                      <li key={pub.title}>
+                        <a href={pub.link} target="_blank" rel="noopener noreferrer" className="group block">
+                          <h4 className="text-sm font-bold leading-snug text-bright transition-colors group-hover:text-teal">{pub.title} ↗</h4>
+                          <span className="mt-1 block text-xs text-dim">
                             {pub.journal} · {pub.date}
                           </span>
                         </a>
-                      ))}
-                    </div>
-                  </div>
-                </MagicBentoCard>
+                      </li>
+                    ))}
+                  </ul>
+                </Frame>
               </motion.div>
 
-              <motion.div {...reveal} className="md:col-span-12 lg:col-span-8">
-                <MagicBentoCard glowColor="61, 227, 242" particleCount={8} className="flex h-full min-h-[300px] flex-col justify-between rounded-[2rem] border border-white/10 bg-[#1D1860] p-6 text-left md:min-h-[350px] md:p-8">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-electric/20 text-[#A99FFF]">
-                    <Layers className="h-6 w-6" strokeWidth={1.75} />
-                  </div>
-                  <div className="my-6 space-y-6">
-                    <span className="block text-[10px] font-bold uppercase tracking-wider text-cream/45">Technical Architecture</span>
-                    <div className="grid gap-6 sm:grid-cols-3">
-                      {SKILLS_CATEGORIES.map((cat, idx) => (
-                        <div key={cat.title} className="space-y-3">
-                          <h4 className="border-b border-white/10 pb-1.5 text-[11px] font-bold uppercase tracking-wider" style={{ color: [C.hot, C.cyan, C.sun][idx] }}>
-                            {cat.title}
-                          </h4>
-                          <div className="flex flex-wrap gap-1">
-                            {cat.skills.map(sk => (
-                              <span key={sk} className="rounded-md bg-white/[0.06] px-2 py-0.5 text-[10px] font-semibold text-cream/75 transition-colors duration-200 hover:bg-cyan/15 hover:text-cyan">
-                                {sk}
-                              </span>
-                            ))}
-                          </div>
+              <motion.div {...reveal} className="lg:col-span-6">
+                <Frame title="credentials & awards" titleColor={A.amber} className="h-full" bodyClassName="flex h-full flex-col justify-between gap-6">
+                  <ul className="space-y-4">
+                    {AWARDS.map(item => (
+                      <li key={item.t} className="flex items-start gap-3">
+                        <span className="text-amber" aria-hidden="true">
+                          *
+                        </span>
+                        <div>
+                          <h4 className="text-sm font-bold leading-tight text-bright">{item.t}</h4>
+                          <span className="mt-0.5 block text-xs text-dim">{item.s}</span>
                         </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div className="font-mono text-[10px] text-cream/40">Leveraging v0, Antigravity AI, and Claude API for accelerated design-to-code pipelines.</div>
-                </MagicBentoCard>
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="text-xs text-dim"># MikroTik Certified Network Associate (MTCNA)</p>
+                </Frame>
               </motion.div>
 
-              <motion.div {...reveal} className="md:col-span-12 lg:col-span-4">
-                <MagicBentoCard glowColor="61, 227, 242" particleCount={6} className="flex h-full min-h-[300px] flex-col justify-between rounded-[2rem] border border-white/10 bg-[#1D1860] p-6 text-left md:min-h-[350px] md:p-8">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-sun/15 text-sun">
-                    <Award className="h-6 w-6" strokeWidth={1.75} />
+              <motion.div {...reveal} className="lg:col-span-12">
+                <Frame title="technical architecture" titleColor={A.violet} meta="skills" bodyClassName="space-y-8">
+                  <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
+                    {SKILLS_CATEGORIES.map(cat => (
+                      <div key={cat.title}>
+                        <h4 className="text-xs font-bold uppercase tracking-wider" style={{ color: cat.color }}>
+                          {cat.title}/
+                        </h4>
+                        <ul className="mt-3 space-y-1 text-xs text-fg/85 md:text-[13px]">
+                          {cat.skills.map((sk, i) => (
+                            <li key={sk} className="flex gap-2">
+                              <span className="shrink-0 text-line2" aria-hidden="true">
+                                {i === cat.skills.length - 1 ? "└──" : "├──"}
+                              </span>
+                              <span>{sk}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
                   </div>
-                  <div className="my-6 space-y-6">
-                    <span className="block text-[10px] font-bold uppercase tracking-wider text-cream/45">Credentials &amp; Awards</span>
-                    <ul className="space-y-4">
-                      {[
-                        { e: "🏆", t: "3rd Place National UI/UX Design", s: "SI FEST Sriwijaya University 2024" },
-                        { e: "🌟", t: "Web Code Design Finalist", s: "IFFEST Sriwijaya University 2024" },
-                        { e: "🌍", t: "EF SET C2 Proficient & IELTS 6.5", s: "Demonstrated native English proficiency" }
-                      ].map(item => (
-                        <li key={item.t} className="flex items-start gap-3">
-                          <span className="mt-0.5 text-sm">{item.e}</span>
-                          <div>
-                            <h4 className="text-sm font-bold leading-tight">{item.t}</h4>
-                            <span className="block text-[10px] text-cream/45">{item.s}</span>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className="font-mono text-[10px] text-cream/40">MikroTik Certified Network Associate (MTCNA)</div>
-                </MagicBentoCard>
+                  <p className="text-xs text-dim"># Leveraging v0, Antigravity AI, and Claude API for accelerated design-to-code pipelines.</p>
+                </Frame>
               </motion.div>
-            </MagicBento>
+            </div>
           </div>
         </section>
 
         {/* ───────────────── Experience ───────────────── */}
-        <section id="experience" className="relative z-10 bg-ink">
-          <div className="relative mx-auto max-w-5xl px-5 py-24 md:px-10 md:py-36 lg:px-16">
-            <Floaty className="-right-2 top-24 hidden lg:block" duration={7.5}><Burst color={C.hot} size={88}><span className="font-display text-sm leading-none text-ink">BOOM!</span></Burst></Floaty>
-            <motion.div {...reveal} className="mb-12 flex flex-col items-start justify-between gap-6 text-left md:mb-20 lg:flex-row lg:items-end">
-              <div className="space-y-5">
-                <Eyebrow color={C.hot}>Career Milestones</Eyebrow>
-                <h2 className="font-display text-[clamp(3rem,9vw,7rem)] uppercase leading-[0.88]">
-                  <span className="text-outline">Selected</span>
-                  <br />
-                  <span className="text-hot">experiences.</span>
-                </h2>
-              </div>
-              <p className="max-w-xs text-sm font-light leading-relaxed text-cream/60">
-                Bringing professional rigor and interface optimization to corporate and public engineering roles.
-              </p>
-            </motion.div>
+        <section id="experience" className="relative z-10 bg-ground">
+          <div className="mx-auto max-w-5xl px-5 py-24 md:px-10 md:py-36">
+            <SectionHead
+              cmd="git log --graph career"
+              title="Selected experiences"
+              lines={[
+                { text: "Selected", colors: G_WHITE },
+                { text: "experiences.", colors: G_VIOLET }
+              ]}
+              note="Bringing professional rigor and interface optimization to corporate and public engineering roles."
+            />
 
-            <div className="space-y-4 md:space-y-5">
+            <ol className="mt-12 md:mt-16">
               {EXPERIENCE.map((exp, idx) => {
                 const isExpanded = expandedExperience === idx;
+                const last = idx === EXPERIENCE.length - 1;
                 return (
-                  <motion.div
-                    key={exp.role}
-                    initial={{ opacity: 0, y: 25 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true, margin: "-80px" }}
-                    transition={{ duration: 0.5, delay: idx * 0.07 }}
-                    className={`overflow-hidden rounded-[1.5rem] border bg-[#12102E] transition-colors duration-500 md:rounded-[1.75rem] ${
-                      isExpanded ? "border-cyan/40" : "border-white/10 hover:border-white/25"
-                    }`}
-                  >
+                  <motion.li key={exp.role} {...reveal} className="relative pl-8 md:pl-10">
+                    {/* the graph rail and the commit node */}
+                    <span aria-hidden="true" className={`absolute left-[0.3rem] top-0 w-px bg-line2 ${last ? "h-7" : "bottom-0"}`} />
+                    <span aria-hidden="true" className="absolute left-0 top-[1.05rem] bg-ground text-sm leading-none text-aurora">
+                      *
+                    </span>
                     <button
                       onClick={() => setExpandedExperience(isExpanded ? null : idx)}
                       aria-expanded={isExpanded}
-                      className="flex w-full items-center justify-between gap-4 rounded-[inherit] p-5 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-cyan md:p-8"
+                      className="group w-full py-4 text-left focus-visible:outline-offset-0"
                     >
-                      <div className="flex items-start gap-4 md:gap-6">
-                        <span className="text-outline hidden font-display text-5xl leading-none sm:block" style={{ ["--stroke-color" as string]: "rgba(246,241,231,0.35)" }}>
-                          0{idx + 1}
+                      <span className="flex flex-wrap items-baseline gap-x-3 gap-y-1 text-xs">
+                        <span className="text-amber">{shortHash(exp.role + exp.company)}</span>
+                        {idx === 0 && <span className="text-teal">(HEAD -&gt; present)</span>}
+                        <span className="text-dim">{exp.period}</span>
+                        <span className="ml-auto text-aurora" aria-hidden="true">
+                          [{isExpanded ? "-" : "+"}]
                         </span>
-                        <div className="space-y-1">
-                          <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-cyan">{exp.period}</span>
-                          <h3 className="text-lg font-bold tracking-tight md:text-xl">{exp.role}</h3>
-                          <p className="text-xs font-semibold text-cream/55">
-                            {exp.link ? (
-                              <a
-                                href={exp.link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                onClick={e => e.stopPropagation()}
-                                className="flex w-fit items-center gap-1 transition-colors hover:text-cyan hover:underline"
-                              >
-                                {exp.company} <ArrowUpRight className="h-3 w-3" />
-                              </a>
-                            ) : (
-                              exp.company
-                            )}
-                          </p>
-                        </div>
-                      </div>
-                      <motion.div
-                        animate={{ rotate: isExpanded ? 180 : 0 }}
-                        transition={{ type: "spring", stiffness: 200 }}
-                        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${isExpanded ? "bg-cyan text-ink" : "bg-white/10 text-cream/70"}`}
-                      >
-                        <ChevronDown className="h-4 w-4" />
-                      </motion.div>
+                      </span>
+                      <span className="mt-1.5 block text-base font-bold leading-snug text-bright transition-colors group-hover:text-aurora md:text-xl">{exp.role}</span>
+                      <span className="mt-0.5 block text-xs text-dim md:text-sm">@ {exp.company}</span>
                     </button>
 
                     <AnimatePresence initial={false}>
@@ -937,22 +785,66 @@ export default function App() {
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: "auto", opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.3 }}
+                          transition={{ duration: 0.25 }}
                           className="overflow-hidden"
                         >
-                          <div className="space-y-4 border-t border-white/10 bg-black/20 px-5 pb-5 pt-5 text-left md:px-8 md:pb-8">
-                            <p className="text-sm font-light leading-relaxed text-cream/75">{exp.description}</p>
-                            <div className="flex items-start gap-2 rounded-2xl border border-cyan/20 bg-cyan/10 p-4 text-xs font-semibold text-cyan">
-                              <span className="text-base leading-none">⚡</span>
-                              <div>
-                                <span className="mb-0.5 block text-[10px] font-bold uppercase tracking-wider text-cyan/80">Key Performance Indicator</span>
-                                {exp.metrics}
-                              </div>
-                            </div>
+                          <div className="space-y-3 pb-7 text-sm">
+                            <p className="leading-relaxed text-fg/85">{exp.description}</p>
+                            <p className="border-l-2 border-aurora/60 bg-aurora/[0.06] px-3 py-2 leading-relaxed text-aurora">
+                              <span aria-hidden="true">+ </span>
+                              {exp.metrics}
+                            </p>
+                            {exp.link && (
+                              <a href={exp.link} target="_blank" rel="noopener noreferrer" className="tlink inline-block text-xs text-teal">
+                                {exp.link.replace(/^https?:\/\//, "").replace(/\/$/, "")} ↗
+                              </a>
+                            )}
                           </div>
                         </motion.div>
                       )}
                     </AnimatePresence>
+                  </motion.li>
+                );
+              })}
+            </ol>
+          </div>
+        </section>
+
+        {/* ───────────────── Organizations ───────────────── */}
+        <section id="organizations" className="relative z-10 bg-ground">
+          <div className="mx-auto max-w-7xl px-5 pb-24 pt-8 md:px-10 md:pb-36">
+            <SectionHead
+              cmd="tree ~/organizations"
+              title="Organizational experience"
+              lines={[
+                { text: "Organizational", colors: G_WHITE },
+                { text: "experience.", colors: G_TEAL }
+              ]}
+              note="Showcasing leadership, collaboration, and community initiatives executed throughout campus life."
+            />
+
+            <div className="mt-12 grid grid-cols-1 gap-6 text-xs md:mt-16 md:text-sm lg:grid-cols-2">
+              {ORGANIZATIONS.map((org, idx) => {
+                const accent = ORG_ACCENTS[idx % ORG_ACCENTS.length];
+                return (
+                  <motion.div key={org.organization} {...reveal}>
+                    <Frame as="article" title={org.organization} titleColor={accent} meta={pad2(idx + 1)} className="ascii-hover h-full">
+                      <AsciiImage src={org.image} alt={org.organization} width={16} height={10} fit="cover" cell={5} className="w-full" />
+                      <p className="mt-6 text-lg font-bold leading-snug text-bright md:text-xl">"{org.tagline}"</p>
+                      <p className="mt-2 text-xs text-dim">
+                        <span style={{ color: accent }}>{org.role}</span> · {org.period}
+                      </p>
+                      <ul className="mt-5 space-y-1.5 text-[13px] leading-relaxed text-fg/80">
+                        {org.bullets.map((bullet, i) => (
+                          <li key={bullet} className="flex gap-2">
+                            <span className="shrink-0 text-line2" aria-hidden="true">
+                              {i === org.bullets.length - 1 ? "└──" : "├──"}
+                            </span>
+                            <span>{bullet}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </Frame>
                   </motion.div>
                 );
               })}
@@ -960,289 +852,116 @@ export default function App() {
           </div>
         </section>
 
-        {/* ───────────────── Organizations ───────────────── */}
-        <section id="organizations" className="relative z-10 w-full bg-ink pt-24 md:pt-36">
-          <motion.div {...reveal} className="mx-auto mb-12 flex max-w-5xl flex-col items-start justify-between gap-6 px-5 text-left md:mb-20 md:px-10 lg:flex-row lg:items-end lg:px-16">
-            <div className="space-y-5">
-              <Eyebrow color={C.mint}>College Life &amp; Leadership</Eyebrow>
-              <h2 className="font-display text-[clamp(3rem,9vw,7rem)] uppercase leading-[0.88]">
-                <span className="text-outline">Organizational</span>
-                <br />
-                <span className="text-mint">experience.</span>
-              </h2>
+        {/* ───────────────── Launch: the rocket climbs out of the clouds as you scroll ───────────────── */}
+        <section id="launch" ref={launchRef} className="relative z-10 h-[110svh] min-h-[620px] overflow-hidden bg-ground">
+          <AsciiCanvas scene={liftoff} images={{ rocket: ROCKET_IMG }} getProgress={launchProgress} cell={sceneCell} className="absolute inset-0" />
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-ground to-transparent" aria-hidden="true" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-ground" aria-hidden="true" />
+
+          <div className="relative z-10 mx-auto max-w-7xl px-5 pt-24 text-center md:px-10 md:pt-28">
+            <Prompt cmd="./launch --your-product" />
+            <h2 className="sr-only">Ready for liftoff?</h2>
+            <div className="mt-6 lg:hidden">
+              <AsciiText
+                lines={[
+                  { text: "Ready for", colors: G_WHITE },
+                  { text: "liftoff?", colors: G_WARM }
+                ]}
+                size="clamp(3rem, 14vw, 6.5rem)"
+                align="center"
+              />
             </div>
-            <p className="max-w-xs text-sm font-light leading-relaxed text-cream/60">
-              Showcasing leadership, collaboration, and community initiatives executed throughout campus life.
-            </p>
-          </motion.div>
-
-          <div className="w-full">
-            {ORGANIZATIONS.map((org, idx) => {
-              const isEven = idx % 2 === 0;
-              const accent = ORG_ACCENTS[idx % ORG_ACCENTS.length];
-              return (
-                <div key={org.organization} className={`group relative flex w-full flex-col overflow-hidden border-t border-white/10 ${isEven ? "lg:flex-row" : "lg:flex-row-reverse"}`}>
-                  <div className="relative min-h-[260px] w-full overflow-hidden bg-black sm:min-h-[350px] lg:min-h-[550px] lg:w-1/2">
-                    <img
-                      src={org.image}
-                      alt={org.organization}
-                      loading="lazy"
-                      decoding="async"
-                      className="absolute inset-0 h-full w-full scale-100 object-cover grayscale transition-[filter,transform] duration-700 ease-out group-hover:scale-105 group-hover:grayscale-0"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-ink/70 to-transparent lg:hidden" />
-                    <span className="absolute left-5 top-5 font-display text-6xl leading-none md:text-7xl" style={{ color: accent }}>
-                      0{idx + 1}
-                    </span>
-                  </div>
-
-                  <div className="relative z-10 flex w-full flex-col justify-between bg-deep px-6 py-10 text-left sm:p-12 md:p-16 lg:w-1/2 lg:p-14 xl:p-24">
-                    <div>
-                      <div className="mb-6 inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-widest md:mb-8" style={{ color: accent, borderColor: `${accent}55`, background: `${accent}14` }}>
-                        <span className="h-1.5 w-1.5 rounded-full" style={{ background: accent }} />
-                        {org.organization}
-                      </div>
-                      <h3 className="mb-6 text-2xl font-extrabold leading-tight tracking-tight md:mb-8 md:text-3xl xl:text-4xl">"{org.tagline}"</h3>
-                      <ul className="space-y-4">
-                        {org.bullets.map(bullet => (
-                          <li key={bullet} className="flex items-start gap-3 text-sm font-light text-cream/70 md:text-base">
-                            <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: accent }} />
-                            <span>{bullet}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div className="mt-10 flex flex-col items-start justify-between gap-4 border-t border-white/10 pt-6 sm:flex-row sm:items-center md:mt-12 md:pt-8">
-                      <div>
-                        <h4 className="text-base font-bold leading-tight">{org.role}</h4>
-                        <p className="mt-1 font-mono text-xs text-cream/50">{org.period}</p>
-                      </div>
-                      <span className="shrink-0 rounded-full px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-widest text-ink" style={{ background: accent }}>
-                        Active Member
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </section>
-
-        {/* ───────────────── Launch pad: the rocket lifts off into the contact section ───────────────── */}
-        {/* --rh is the rocket's rendered height; the headline and smoke size themselves from it. */}
-        <section
-          id="launch"
-          ref={launchRef}
-          className="relative z-10 overflow-hidden bg-[radial-gradient(120%_85%_at_50%_25%,#4436EA_0%,#3127CC_45%,#2419A6_100%)] pb-[calc(max(190px,17vw)*0.8)] pt-28 [--rh:clamp(280px,42vh,370px)] md:pt-32 lg:pt-36 lg:[--rh:clamp(400px,60vh,600px)]"
-        >
-          {/* Fade in from the dark section above so the colour change isn't a hard edge */}
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-ink to-transparent" aria-hidden="true" />
-          <div className="starfield pointer-events-none absolute inset-0 opacity-50" aria-hidden="true" />
-
-          {/* Chunky doodles floating around the launch (they sink behind the clouds) */}
-          <Floaty className="left-[4%] top-[62%] md:left-[7%] md:top-[56%]" duration={7}><Square color={C.hot} size={isDesktop ? 96 : 52} stroke={7} /></Floaty>
-          <Floaty className="left-[22%] top-[40%] hidden md:block" duration={8} delay={0.6} rotate={-10}><Zigzag color={C.cyan} size={88} stroke={8} /></Floaty>
-          <Floaty className="left-[15%] top-[71%] hidden sm:block" duration={9} delay={1.2}><Squiggle color={C.sun} size={isDesktop ? 104 : 70} stroke={8} /></Floaty>
-          <Floaty className="left-[4%] top-[38%] hidden md:block" duration={6.5} delay={0.3}><Dot color={C.cyan} size={24} /></Floaty>
-          <Floaty className="left-[31%] top-[24%] hidden lg:block" duration={7.5} delay={1.6}><Dot color={C.sun} size={12} /></Floaty>
-          <Floaty className="right-[21%] top-[50%] hidden md:block" duration={8.5} delay={0.9} rotate={60}><Arc color={C.hot} size={92} stroke={8} /></Floaty>
-          <Floaty className="right-[5%] top-[60%] md:right-[9%] md:top-[63%]" duration={7} delay={0.4}><Ring color={C.sun} size={isDesktop ? 92 : 50} stroke={8} /></Floaty>
-          <Floaty className="right-[11%] top-[42%] hidden lg:block" duration={6} delay={1.1}><Capsule color={C.cyan} size={84} /></Floaty>
-          <Floaty className="right-[29%] top-[68%] hidden lg:block" duration={9.5} delay={0.2} rotate={14}><Zigzag color={C.cream} size={70} stroke={8} /></Floaty>
-          <Floaty className="right-[34%] top-[20%] hidden lg:block" duration={8} delay={2}><Plus color={C.cream} size={28} /></Floaty>
-
-          <h2 className="sr-only">Ready for liftoff?</h2>
-
-          {/* Short note, top-right on desktop (sits above the right-hand word) */}
-          <motion.p
-            initial={{ opacity: 0, y: -10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="absolute right-[6%] top-36 z-10 hidden max-w-[17.5rem] text-[13px] leading-relaxed text-cream/80 lg:block xl:right-[9%]"
-          >
-            Got a product that needs to get off the ground? I'm open to full-time roles, freelance projects and collaborations.
-          </motion.p>
-
-          <div className="relative z-10 mx-auto flex max-w-[1440px] flex-col items-center px-4 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-start lg:gap-10 lg:px-8">
-            <motion.div
-              aria-hidden="true"
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-              style={{ x: isDesktop ? wordLeftX : 0 }}
-              className="order-1 text-center font-display text-[clamp(3.3rem,15vw,7rem)] uppercase leading-[0.88] lg:whitespace-nowrap lg:pt-[calc(var(--rh)*0.2)] lg:text-right lg:text-[clamp(3.5rem,6.3vw,8.25rem)]"
-            >
-              Ready for
-            </motion.div>
-
-            <motion.div
-              aria-hidden="true"
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
-              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-              style={{ x: isDesktop ? wordRightX : 0 }}
-              className="order-2 text-center font-display text-[clamp(3.3rem,15vw,7rem)] uppercase leading-[0.88] text-sun lg:order-3 lg:whitespace-nowrap lg:pt-[calc(var(--rh)*0.2)] lg:text-left lg:text-[clamp(3.5rem,6.3vw,8.25rem)]"
-            >
-              liftoff?
-            </motion.div>
-
-            <motion.p
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="order-3 mt-5 max-w-[20rem] text-center text-[13px] leading-relaxed text-cream/80 lg:hidden"
-            >
+            <div className="mt-6 hidden grid-cols-[1fr_15rem_1fr] items-start lg:grid">
+              <AsciiText lines={[{ text: "Ready for", colors: G_WHITE }]} size="clamp(3.5rem, 6.6vw, 8rem)" align="right" />
+              <span />
+              <AsciiText lines={[{ text: "liftoff?", colors: G_WARM }]} size="clamp(3.5rem, 6.6vw, 8rem)" align="left" />
+            </div>
+            <p className="mx-auto mt-5 max-w-sm text-[13px] leading-relaxed text-bright/90 lg:mt-2">
               Got a product that needs to get off the ground? I'm open to full-time roles, freelance projects and collaborations.
-            </motion.p>
-
-            {/* The rocket: rises in when the section arrives, then keeps climbing as you scroll */}
-            <motion.div style={{ y: isDesktop ? rocketY : 0 }} className="relative order-4 mt-8 lg:order-2 lg:mt-0">
-              <motion.div
-                initial={{ y: 260, opacity: 0 }}
-                whileInView={{ y: 0, opacity: 1 }}
-                viewport={{ once: true, margin: "-60px" }}
-                transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <div className="hover-y relative">
-                  <img
-                    src={`${BASE}images/rocket-hero.webp`}
-                    alt=""
-                    width={434}
-                    height={1100}
-                    loading="lazy"
-                    decoding="async"
-                    draggable={false}
-                    className="relative z-[2] h-[var(--rh)] w-auto select-none"
-                  />
-                  <svg viewBox="0 0 60 100" className="rj-flame absolute left-1/2 top-[87%] z-[1] h-[24%] w-[30%] -translate-x-1/2" aria-hidden="true">
-                    <defs>
-                      <linearGradient id="launchFlame" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0" stopColor="#FFF6C8" />
-                        <stop offset="0.35" stopColor="#FFC93C" />
-                        <stop offset="0.7" stopColor="#FF8A3D" />
-                        <stop offset="1" stopColor="#FF3D81" stopOpacity="0" />
-                      </linearGradient>
-                    </defs>
-                    <path d="M30 0C47 14 56 36 48 60 42 78 35 90 30 100 25 90 18 78 12 60 4 36 13 14 30 0Z" fill="url(#launchFlame)" />
-                    <path d="M30 4C39 14 42 30 38 46 35 56 32 64 30 70 28 64 25 56 22 46 18 30 21 14 30 4Z" fill="#FFFBEA" opacity="0.9" />
-                  </svg>
-                </div>
-              </motion.div>
-
-              {/* Exhaust smoke rolling out under the nozzle and into the clouds */}
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute left-1/2 top-[103%] z-[3] h-[calc(var(--rh)*0.7)] w-[calc(var(--rh)*1.15)] -translate-x-1/2"
-              >
-                {SMOKE.map(([x, y, s, d], i) => (
-                  <span
-                    key={i}
-                    className="puff absolute aspect-square -translate-x-1/2 -translate-y-1/2 rounded-full"
-                    style={{
-                      left: `${x}%`,
-                      top: `${y}%`,
-                      width: `${s}%`,
-                      animationDelay: `${-d}s`,
-                      background: "radial-gradient(circle at 34% 30%, #FFFFFF 0%, #F3F1FF 42%, #CFCAF7 100%)"
-                    }}
-                  />
-                ))}
-              </div>
-            </motion.div>
+            </p>
           </div>
-
-          {/* Soft cloud bank: lavender bubbles, then solid cream that melts into the contact section */}
-          <CloudBank className="pointer-events-none absolute bottom-[-2px] left-0 z-20 h-[max(190px,17vw)] w-full" />
         </section>
 
         {/* ───────────────── Contact / Footer ───────────────── */}
-        <footer id="contact" className="relative z-10 bg-cream pt-14 text-ink md:pt-20">
-          <Floaty className="left-[6%] top-12" duration={7}><Zigzag color={C.hot} size={60} stroke={6} /></Floaty>
-          <Floaty className="right-[8%] top-20 hidden sm:block" duration={8.5} delay={1}><Ring color={C.electric} size={48} stroke={6} /></Floaty>
-          <Floaty className="bottom-[45%] left-[10%] hidden md:block" duration={9} delay={0.6}><Square color={C.orange} size={40} stroke={6} /></Floaty>
-          <Floaty className="bottom-[48%] right-[12%] hidden md:block" duration={6.5} delay={1.4}><Squiggle color={C.electric} size={70} stroke={6} /></Floaty>
+        <footer id="contact" className="relative z-10 bg-ground pb-28 pt-10 md:pb-16 md:pt-16">
+          <div className="mx-auto max-w-6xl px-5 md:px-10">
+            <Frame variant="double" color="var(--color-line2)" title="./contact.sh" titleColor={A.aurora} meta="tty1" className="text-xs md:text-sm" bodyClassName="md:!px-[5ch] md:!py-12">
+              <Prompt cmd="./contact.sh --hello" />
+              <h2 className="sr-only">Let's build something that flies.</h2>
+              <AsciiText
+                lines={[
+                  { text: "Let's build", colors: G_WHITE },
+                  { text: "something", colors: G_WHITE },
+                  { text: "that flies.", colors: G_AURORA }
+                ]}
+                size="clamp(2.8rem, 10vw, 8.5rem)"
+                className="mt-6"
+              />
+              <p className="mt-8 max-w-md text-sm leading-relaxed text-fg/85 md:text-base">Always open to talking UI/UX, design systems, frontend builds or AI-powered product ideas.</p>
 
-          <div className="relative mx-auto max-w-6xl px-5 text-center md:px-10">
-            <Eyebrow color={C.hot}>Connect &amp; Collaborate</Eyebrow>
-            <motion.h2 {...reveal} className="mt-6 font-display text-[clamp(3.4rem,13vw,11rem)] uppercase leading-[0.86]">
-              Let's build
-              <br />
-              <span className="text-outline" style={{ ["--stroke-color" as string]: C.ink }}>
-                something
-              </span>
-              <br />
-              <span className="text-hot">that flies.</span>
-            </motion.h2>
-            <p className="mx-auto mt-8 max-w-md text-sm font-medium leading-relaxed text-ink/75 md:text-base">
-              Always open to talking UI/UX, design systems, frontend builds or AI-powered product ideas.
-            </p>
-            <div className="mt-10 flex flex-wrap justify-center gap-3">
-              <a href="mailto:faiqsc@gmail.com" className="btn btn-ink">
-                <Mail className="h-4 w-4" /> faiqsc@gmail.com
-              </a>
-              <a href="https://wa.me/6287899677415" target="_blank" rel="noopener noreferrer" className="btn btn-ink-ghost">
-                <Phone className="h-4 w-4" /> WhatsApp
-              </a>
-            </div>
-          </div>
-
-          <div className="relative mt-20 rounded-t-[2.5rem] bg-ink pb-24 pt-14 text-cream md:mt-28 md:rounded-t-[3.5rem] md:pb-16 md:pt-16">
-            <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-10 px-5 text-center md:flex-row md:items-end md:px-10 md:text-left">
-              <div className="space-y-3">
-                <a href="#top" className="font-display text-4xl">
-                  FAIQ<span className="text-hot">.</span>
-                </a>
-                <p className="text-xs text-cream/50">Palembang, South Sumatra, Indonesia</p>
-              </div>
-              <div className="space-y-3 md:text-right">
-                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-cream/40">Visual Networks</p>
-                <div className="flex justify-center gap-3 md:justify-end">
-                  {SOCIAL_LINKS.map(soc => (
-                    <a
-                      key={soc.label}
-                      href={soc.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={soc.label}
-                      className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 transition-colors hover:border-hot hover:bg-hot hover:text-ink"
-                    >
-                      <soc.icon className="h-[18px] w-[18px]" />
+              <ul className="mt-8 grid gap-x-10 gap-y-3 text-sm sm:grid-cols-2">
+                {SOCIAL_LINKS.map(soc => (
+                  <li key={soc.label} className="flex items-baseline gap-3">
+                    <span className="w-[9ch] shrink-0 text-dim">{soc.label}</span>
+                    <a href={soc.url} target={soc.url.startsWith("mailto:") ? undefined : "_blank"} rel="noopener noreferrer" className="tlink min-w-0 truncate text-bright">
+                      {soc.handle}
+                      {soc.url.startsWith("mailto:") ? "" : " ↗"}
                     </a>
-                  ))}
+                  </li>
+                ))}
+              </ul>
+
+              <form onSubmit={handleConnect} className="mt-10 border-t border-dashed border-line2 pt-6">
+                <label htmlFor="connect-email" className="text-xs text-dim">
+                  <span className="text-aurora">$</span> ./connect --email
+                </label>
+                <div className="mt-3 flex flex-col gap-3 sm:flex-row">
+                  <input
+                    id="connect-email"
+                    type="email"
+                    placeholder="your.email@domain.com"
+                    value={emailInput}
+                    onChange={e => setEmailInput(e.target.value)}
+                    required
+                    className="min-w-0 flex-1 border border-line2 bg-panel px-3 py-2.5 text-base text-bright outline-none placeholder:text-dim/60 focus:border-aurora sm:text-sm"
+                  />
+                  <button type="submit" className="btn btn-primary">
+                    connect
+                  </button>
                 </div>
+                <p className="mt-3 text-xs text-dim" aria-live="polite">
+                  {sent ? "> opening your mail app with a note to Faiq..." : "> leave your email to start a conversation about your next product."}
+                </p>
+              </form>
+            </Frame>
+
+            <div className="mt-14 flex flex-col items-center gap-8 text-center md:flex-row md:items-end md:justify-between md:text-left">
+              <a href="#top" aria-label="Back to top" className="block">
+                <pre className="text-[9px] leading-[1.15] text-aurora md:text-[11px]" aria-hidden="true">
+                  {SIGNATURE}
+                </pre>
+              </a>
+              <div className="space-y-1 text-xs text-dim md:text-right">
+                <p>Palembang, South Sumatra, Indonesia</p>
+                <p>© {new Date().getFullYear()} Al Ikhsan Faiq. All rights reserved.</p>
+                <p>Created with Antigravity AI + React &amp; Tailwind v4, rendered in ASCII.</p>
               </div>
-            </div>
-            <div className="mx-auto mt-12 flex max-w-6xl flex-col items-center justify-between gap-3 border-t border-white/10 px-5 pt-8 text-center font-mono text-[11px] text-cream/35 md:flex-row md:px-10 md:text-xs">
-              <span>© {new Date().getFullYear()} Al Ikhsan Faiq. All rights reserved.</span>
-              <span>Created with Antigravity AI + React &amp; Tailwind v4</span>
             </div>
           </div>
         </footer>
 
         {/* Floating availability pill */}
-        <motion.a
+        <a
           href="https://wa.me/6287899677415"
           target="_blank"
           rel="noopener noreferrer"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-4 z-40 flex items-center gap-2.5 rounded-full border border-white/15 bg-ink/90 px-4 py-2.5 text-[10px] font-bold uppercase tracking-wider text-cream shadow-[0_10px_30px_rgba(0,0,0,0.45)] md:bottom-6 md:right-6 md:gap-3 md:px-5 md:py-3 md:text-xs"
+          className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] right-4 z-40 border border-aurora/50 bg-ground/90 px-3 py-2 text-[11px] text-aurora shadow-[0_8px_30px_rgba(0,0,0,0.5)] backdrop-blur-sm transition-colors hover:border-aurora hover:bg-aurora hover:text-ground md:bottom-6 md:right-6 md:text-xs"
         >
-          <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full rounded-full bg-mint opacity-75 motion-safe:animate-ping" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-mint" />
-          </span>
-          Available for hire
-        </motion.a>
+          [<span className="blink" aria-hidden="true">●</span> available for hire]
+        </a>
 
         {/* Case study panel */}
-        <AnimatePresence>
-          {selectedProject && <CaseStudyModal projectTitle={selectedProject} onClose={() => setSelectedProject(null)} />}
-        </AnimatePresence>
+        <AnimatePresence>{selectedProject && <CaseStudyModal projectTitle={selectedProject} onClose={() => setSelectedProject(null)} />}</AnimatePresence>
       </div>
     </MotionConfig>
   );

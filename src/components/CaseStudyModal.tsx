@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { motion } from "motion/react";
-import { X, ArrowUpRight, Award, Clock, Activity, CheckCircle, Smartphone } from "lucide-react";
 
 interface Metric {
   label: string;
@@ -208,209 +207,180 @@ interface CaseStudyModalProps {
   onClose: () => void;
 }
 
+const BAR = 22;
+
+/** before → after as two ASCII bars on the same scale. */
+function MetricBars({ metric, delay }: { metric: Metric; delay: number }) {
+  const max = Math.max(metric.before, metric.after, 1);
+  const cells = (v: number) => Math.max(v > 0 ? 1 : 0, Math.round((v / max) * BAR));
+  const change = metric.before === 0 ? null : metric.isLowerBetter ? ((metric.before - metric.after) / metric.before) * 100 : ((metric.after - metric.before) / metric.before) * 100;
+  const row = (label: string, v: number, on: string, glyph: string) => (
+    <div className="flex items-center gap-2 whitespace-nowrap">
+      <span className="w-[7ch] shrink-0 text-dim">{label}</span>
+      <span aria-hidden="true">
+        <span className="text-dim">[</span>
+        <span className={on}>{glyph.repeat(cells(v))}</span>
+        <span className="text-line2">{"░".repeat(BAR - cells(v))}</span>
+        <span className="text-dim">]</span>
+      </span>
+      <span className="text-bright">
+        {v}
+        {metric.unit}
+      </span>
+    </div>
+  );
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.4, delay }}
+      className="no-scrollbar space-y-1.5 overflow-x-auto border-l-2 border-line2 pl-4 text-[11px] sm:text-xs"
+    >
+      <p className="text-[13px] font-bold text-bright sm:text-sm">{metric.label}</p>
+      {row("phase 1", metric.before, "text-dim", "▒")}
+      {row("phase 2", metric.after, metric.isLowerBetter ? "text-amber" : "text-teal", "█")}
+      {change !== null && (
+        <p className="text-aurora">
+          {metric.isLowerBetter ? "▼ reduced" : "▲ improved"} by {change.toFixed(0)}%
+        </p>
+      )}
+    </motion.div>
+  );
+}
+
+const H2 = ({ children }: { children: React.ReactNode }) => (
+  <h3 className="text-base font-bold text-bright sm:text-lg">
+    <span className="text-aurora">## </span>
+    {children}
+  </h3>
+);
+
 export default function CaseStudyModal({ projectTitle, onClose }: CaseStudyModalProps) {
   const project = CASE_STUDIES[projectTitle];
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const slug = projectTitle.toLowerCase().replace(/\s+/g, "-");
+
+  // Move focus into the panel, and give it back when the panel closes.
+  useEffect(() => {
+    const prev = document.activeElement as HTMLElement | null;
+    closeRef.current?.focus({ preventScroll: true });
+    return () => prev?.focus?.({ preventScroll: true });
+  }, []);
+
   if (!project) return null;
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 flex items-center justify-end overflow-hidden"
-    >
-      {/* Backdrop overlay */}
-      <div
-        onClick={onClose}
-        className="absolute inset-0 bg-black/60 lg:backdrop-blur-md cursor-zoom-out"
-      />
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-50 flex items-center justify-end overflow-hidden">
+      <div onClick={onClose} className="absolute inset-0 cursor-zoom-out bg-ground/75 lg:backdrop-blur-sm" />
 
-      {/* Modal Panel sliding from right */}
       <motion.div
-        initial={{ x: "100%", opacity: 0.95 }}
-        animate={{ x: 0, opacity: 1 }}
-        exit={{ x: "100%", opacity: 0.95 }}
-        transition={{ type: "spring", damping: 32, stiffness: 240 }}
+        initial={{ x: "100%" }}
+        animate={{ x: 0 }}
+        exit={{ x: "100%" }}
+        transition={{ type: "spring", damping: 34, stiffness: 260 }}
         role="dialog"
         aria-modal="true"
         aria-label={project.title}
-        className="relative w-full max-w-4xl h-full bg-[#0E0C24] text-[#F6F1E7] shadow-2xl flex flex-col z-10 overflow-y-auto overscroll-contain no-scrollbar border-l border-white/10"
+        className="no-scrollbar relative z-10 flex h-full w-full max-w-4xl flex-col overflow-y-auto overscroll-contain border-l border-line2 bg-panel font-mono text-fg"
       >
-        {/* Top Sticky Header */}
-        <div className="sticky top-0 bg-[#0E0C24]/95 lg:bg-[#0E0C24]/85 lg:backdrop-blur-md z-30 px-5 sm:px-8 py-4 sm:py-6 border-b border-white/10 flex justify-between items-center gap-3">
-          <div className="flex flex-wrap items-center gap-2 sm:gap-3 min-w-0">
-            <span className="text-[10px] font-bold font-mono uppercase tracking-[0.2em] px-2.5 py-1 bg-white/[0.07] rounded-full text-[#F6F1E7]/65">
-              {project.category}
-            </span>
-            {projectTitle === "Yappy" && (
-              <span className="text-[10px] font-bold font-mono uppercase tracking-[0.2em] px-2.5 py-1 bg-[#FFC93C]/10 text-[#FFC93C] rounded-full flex items-center gap-1 border border-[#FFC93C]/25">
-                <Award className="w-3.5 h-3.5" /> Award Winner
-              </span>
-            )}
-          </div>
-          <motion.button
-            whileHover={{ rotate: 90, scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={onClose}
-            aria-label="Close case study"
-            className="w-10 h-10 shrink-0 rounded-full bg-white/[0.08] hover:bg-[#FF3D81] hover:text-[#0A0915] flex items-center justify-center transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </motion.button>
+        {/* Window title bar */}
+        <div className="sticky top-0 z-30 flex items-center gap-3 border-b border-line2 bg-panel/95 px-4 py-3 backdrop-blur-sm sm:px-6">
+          <span className="flex shrink-0 gap-1.5" aria-hidden="true">
+            <span className="h-2.5 w-2.5 rounded-full bg-rose/80" />
+            <span className="h-2.5 w-2.5 rounded-full bg-amber/80" />
+            <span className="h-2.5 w-2.5 rounded-full bg-aurora/80" />
+          </span>
+          <span className="min-w-0 truncate text-xs text-dim">~/case-studies/{slug}.md</span>
+          <button ref={closeRef} onClick={onClose} aria-label="Close case study" className="btn btn-sm ml-auto shrink-0">
+            esc ✕
+          </button>
         </div>
 
-        {/* Core Content */}
-        <div className="px-5 sm:px-8 lg:px-16 py-10 sm:py-12 space-y-12 sm:space-y-16 flex-1">
-          {/* Header Title */}
-          <div>
-            <h1 className="text-6xl sm:text-7xl lg:text-8xl font-display uppercase leading-[0.9]">
-              {project.title}
-            </h1>
-            <p className="text-lg sm:text-xl lg:text-2xl text-[#F6F1E7]/60 mt-4 leading-relaxed font-sans max-w-2xl font-light">
-              {project.subtitle}
+        <div className="flex-1 space-y-12 px-5 py-10 sm:space-y-14 sm:px-8 sm:py-12 lg:px-14">
+          <header>
+            <p className="text-xs text-dim">
+              <span className="text-aurora">guest@faiq</span>:<span className="text-teal">~</span>$ cat {slug}.md
             </p>
+            <div className="mt-6 flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-[0.16em]">
+              <span className="border border-line2 px-2 py-1 text-dim">{project.category}</span>
+              {projectTitle === "Yappy" && <span className="border border-amber/40 px-2 py-1 text-amber">* award winner</span>}
+            </div>
+            <h2 className="mt-5 text-4xl font-extrabold uppercase leading-none tracking-tight text-bright sm:text-6xl">
+              <span className="text-aurora"># </span>
+              {project.title}
+            </h2>
+            <p className="mt-4 max-w-2xl text-sm leading-relaxed text-fg/75 sm:text-base">{project.subtitle}</p>
+          </header>
+
+          {/* Meta as a little key/value table */}
+          <dl className="grid gap-x-6 gap-y-2 border-y border-dashed border-line2 py-5 text-xs sm:grid-cols-[9ch_1fr] sm:text-sm">
+            <dt className="text-dim">role</dt>
+            <dd className="text-bright">{project.role}</dd>
+            <dt className="text-dim">timeline</dt>
+            <dd className="text-bright">{project.duration}</dd>
+            <dt className="text-dim">stack</dt>
+            <dd className="flex flex-wrap gap-x-3 gap-y-1">
+              {project.tags.map(tag => (
+                <span key={tag} className="text-fg/85">
+                  <span className="text-aurora">#</span>
+                  {tag}
+                </span>
+              ))}
+            </dd>
+          </dl>
+
+          <div className="grid gap-10 md:grid-cols-2 md:gap-12">
+            <section className="space-y-3">
+              <H2>the challenge</H2>
+              <p className="text-sm leading-relaxed text-fg/80">{project.problem}</p>
+            </section>
+            <section className="space-y-3">
+              <H2>the solution</H2>
+              <p className="text-sm leading-relaxed text-fg/80">{project.solution}</p>
+            </section>
           </div>
 
-          {/* Quick Meta Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 p-5 sm:p-6 bg-white/[0.04] rounded-[1.5rem] border border-white/10">
-            <div>
-              <span className="block text-[10px] font-bold uppercase tracking-wider text-[#F6F1E7]/40">Role</span>
-              <span className="text-sm font-semibold mt-1 block">{project.role}</span>
-            </div>
-            <div>
-              <span className="block text-[10px] font-bold uppercase tracking-wider text-[#F6F1E7]/40">Timeline</span>
-              <span className="text-sm font-semibold mt-1 block">{project.duration}</span>
-            </div>
-            <div className="col-span-2 md:col-span-1">
-              <span className="block text-[10px] font-bold uppercase tracking-wider text-[#F6F1E7]/40">Deliverables</span>
-              <div className="flex flex-wrap gap-1 mt-1.5">
-                {project.tags.slice(0, 3).map((tag, i) => (
-                  <span key={i} className="text-[10px] px-2 py-0.5 rounded bg-white/[0.07] text-[#F6F1E7]/80 font-medium">{tag}</span>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Problem & Solution Split */}
-          <div className="grid md:grid-cols-2 gap-10 md:gap-12 pt-4">
-            <div className="space-y-4">
-              <div className="w-10 h-10 rounded-xl bg-[#FF3D81]/15 text-[#FF3D81] flex items-center justify-center">
-                <Activity className="w-5 h-5" />
-              </div>
-              <h3 className="text-3xl font-display uppercase leading-none">The Challenge</h3>
-              <p className="text-sm text-[#F6F1E7]/65 leading-relaxed font-normal">
-                {project.problem}
-              </p>
-            </div>
-            <div className="space-y-4">
-              <div className="w-10 h-10 rounded-xl bg-[#3DF2A6]/15 text-[#3DF2A6] flex items-center justify-center">
-                <CheckCircle className="w-5 h-5" />
-              </div>
-              <h3 className="text-3xl font-display uppercase leading-none">The Solution</h3>
-              <p className="text-sm text-[#F6F1E7]/65 leading-relaxed font-normal">
-                {project.solution}
-              </p>
-            </div>
-          </div>
-
-          {/* Design Process */}
-          <div className="space-y-6 pt-4">
-            <h3 className="text-3xl sm:text-4xl font-display uppercase leading-none flex items-center gap-3">
-              <Smartphone className="w-7 h-7 stroke-[1.75] text-[#3DE3F2]" /> UX Process
-            </h3>
-            <div className="relative border-l border-white/15 pl-6 ml-3 space-y-8">
+          <section className="space-y-5">
+            <H2>ux process</H2>
+            <ol className="space-y-4 text-sm">
               {project.process.map((step, i) => (
-                <div key={i} className="relative">
-                  {/* Circle Node */}
-                  <div className="absolute -left-[33px] top-0.5 w-5 h-5 rounded-full bg-[#0E0C24] border-2 border-[#3DE3F2] text-[#3DE3F2] flex items-center justify-center">
-                    <span className="text-[9px] font-bold">{i + 1}</span>
-                  </div>
-                  <p className="text-sm text-[#F6F1E7]/75 leading-relaxed">
-                    {step}
-                  </p>
-                </div>
+                <li key={i} className="flex gap-3">
+                  <span className="shrink-0 text-teal">{String(i + 1).padStart(2, "0")}</span>
+                  <span className="leading-relaxed text-fg/80">{step}</span>
+                </li>
+              ))}
+            </ol>
+          </section>
+
+          <section className="space-y-6">
+            <div>
+              <H2>maze testing metrics</H2>
+              <p className="mt-2 text-xs text-dim sm:text-sm">Quantitative improvements validated via task-based analytics between testing phases.</p>
+            </div>
+            <div className="grid gap-6 lg:grid-cols-2">
+              {project.metrics.map((metric, idx) => (
+                <React.Fragment key={idx}>
+                  <MetricBars metric={metric} delay={0.08 * idx} />
+                </React.Fragment>
               ))}
             </div>
-          </div>
+          </section>
 
-          {/* Verification & Metrics Charts */}
-          <div className="space-y-8 pt-4">
-            <div>
-              <h3 className="text-3xl sm:text-4xl font-display uppercase leading-none flex items-center gap-3">
-                <Clock className="w-7 h-7 stroke-[1.75] text-[#FFC93C]" /> Maze Testing Metrics
-              </h3>
-              <p className="text-sm text-[#F6F1E7]/45 mt-2">
-                Quantitative improvements validated via task-based analytics between testing phases.
-              </p>
-            </div>
-
-            {/* Bar charts visualization */}
-            <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-              {project.metrics.map((metric, idx) => {
-                const percentDiff = metric.isLowerBetter
-                  ? ((metric.before - metric.after) / metric.before) * 100
-                  : ((metric.after - metric.before) / metric.before) * 100;
-
-                return (
-                  <div key={idx} className="p-5 sm:p-6 rounded-[1.5rem] sm:rounded-[2rem] bg-white/[0.04] border border-white/10 flex flex-col justify-between">
-                    <div>
-                      <span className="text-xs font-bold text-[#F6F1E7]/45 block mb-1">{metric.label}</span>
-                      <div className="flex items-baseline gap-2">
-                        <span className="text-4xl font-display">{metric.after}{metric.unit}</span>
-                        <span className="text-xs text-[#F6F1E7]/35 line-through">from {metric.before}</span>
-                      </div>
-                    </div>
-
-                    {/* Animated SVG Chart */}
-                    <div className="my-6 h-16 w-full flex items-end gap-4 px-2">
-                      {/* Before Bar */}
-                      <div className="flex-1 flex flex-col items-center gap-1.5">
-                        <div className="w-full bg-white/10 rounded-t-sm h-12" />
-                        <span className="text-[8px] font-bold text-[#F6F1E7]/35">Phase 1</span>
-                      </div>
-
-                      {/* After Bar */}
-                      <div className="flex-1 flex flex-col items-center gap-1.5">
-                        <motion.div
-                          initial={{ height: 0 }}
-                          whileInView={{ height: `${(metric.after / Math.max(metric.before, metric.after)) * 48}px` }}
-                          viewport={{ once: true }}
-                          transition={{ type: "spring", stiffness: 100, delay: 0.15 * idx }}
-                          className={`w-full rounded-t-sm ${metric.isLowerBetter ? "bg-[#FFC93C]" : "bg-[#3DE3F2]"}`}
-                        />
-                        <span className="text-[8px] font-bold text-[#F6F1E7]/55">Phase 2</span>
-                      </div>
-                    </div>
-
-                    <div className="text-[10px] font-bold text-[#3DF2A6] bg-[#3DF2A6]/10 px-3 py-1.5 rounded-full w-fit self-start flex items-center gap-1 border border-[#3DF2A6]/20">
-                      {metric.isLowerBetter ? "Reduced" : "Improved"} by {percentDiff.toFixed(0)}%
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Immersive CTA to slides */}
-          <div className="pt-8">
-            <motion.a
-              href={project.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="w-full bg-[#FF3D81] hover:bg-[#FF5C96] text-[#0A0915] p-5 sm:p-6 rounded-[1.5rem] sm:rounded-[2rem] flex items-center justify-between gap-4 group transition-colors"
-            >
-              <div className="text-left">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-[#0A0915]/60 block">Full Presentation</span>
-                <span className="text-2xl sm:text-3xl font-display uppercase leading-none mt-1.5 block">View Figma Deck</span>
-              </div>
-              <div className="w-12 h-12 shrink-0 rounded-full bg-[#0A0915] text-[#F6F1E7] flex items-center justify-center">
-                <ArrowUpRight className="w-5 h-5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-              </div>
-            </motion.a>
-          </div>
-
+          <a
+            href={project.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex items-center justify-between gap-4 border border-aurora bg-aurora px-5 py-5 text-ground transition-colors hover:border-bright hover:bg-bright sm:px-6"
+          >
+            <span>
+              <span className="block text-[11px] uppercase tracking-[0.18em] opacity-70">full presentation</span>
+              <span className="mt-1 block text-xl font-extrabold uppercase sm:text-2xl">view figma deck</span>
+            </span>
+            <span className="text-2xl transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true">
+              ↗
+            </span>
+          </a>
         </div>
       </motion.div>
     </motion.div>

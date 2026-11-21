@@ -3,7 +3,31 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#0A0915" />
+    <meta name="theme-color" content="#05080F" />
+
+    <!--
+      Runs before first paint. Adds .js (enables the ASCII image reveal) and .booting when the boot intro
+      should play: once per session, not for reduced motion, crawlers or link-preview bots.
+      ?boot forces it, ?noboot skips it. See src/ascii/BootSequence.tsx.
+    -->
+    <script>
+      (function () {
+        var d = document.documentElement;
+        d.classList.add("js");
+        try {
+          var q = location.search;
+          var bot = /bot|crawl|spider|slurp|facebookexternalhit|whatsapp|telegram|discord|preview|lighthouse|headless|pagespeed/i.test(navigator.userAgent);
+          var skip = /[?&]noboot(&|=|$)/.test(q) || bot || matchMedia("(prefers-reduced-motion: reduce)").matches || sessionStorage.getItem("faiq:booted");
+          if (/[?&]boot(&|=|$)/.test(q) || !skip) {
+            d.classList.add("booting");
+            // Safety net: if the app hasn't started the intro in time (slow network, script error), show the page.
+            setTimeout(function () {
+              if (!window.__bootStarted) d.classList.remove("booting");
+            }, 5000);
+          }
+        } catch (e) {}
+      })();
+    </script>
 
     <!--
       __SITE_URL__ is filled in at build time by scripts/prerender.mjs from "homepage" in package.json.
@@ -128,9 +152,9 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet">
   </head>
-  <body class="bg-[#0A0915] text-[#F6F1E7]">
+  <body class="bg-[#05080F] text-[#D8E2F4]">
     <!-- At build time the whole page is prerendered into #root (scripts/prerender.mjs) so crawlers that don't run JavaScript still see it. -->
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
